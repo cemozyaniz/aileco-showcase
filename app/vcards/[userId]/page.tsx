@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import VCardProfilePage from "./VCardProfilePage";
+import type { Collaboration } from "@/app/components/CoBrandingBar";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
@@ -19,6 +20,7 @@ interface VCardFieldData {
 interface VCardApiResponse {
   user: VCardUserData;
   fields: VCardFieldData[];
+  collaboration?: Collaboration | null;
 }
 
 interface VCardProfile {
@@ -26,6 +28,7 @@ interface VCardProfile {
   phone: string | null;
   email: string | null;
   fields: VCardFieldData[];
+  collaboration?: Collaboration | null;
 }
 
 async function getVCardProfile(userId: string): Promise<VCardProfile | null> {
@@ -43,6 +46,7 @@ async function getVCardProfile(userId: string): Promise<VCardProfile | null> {
       phone: data.user?.phoneNumber || null,
       email: data.user?.email || null,
       fields: data.fields || [],
+      collaboration: data.collaboration || null,
     };
   } catch {
     return null;

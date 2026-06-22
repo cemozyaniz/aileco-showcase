@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Card3D from "@/app/components/Card3D";
+import CoBrandingBar, { type Collaboration } from "@/app/components/CoBrandingBar";
 import { useTranslation } from "@/providers/LanguageProvider";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.aileco.com";
@@ -31,6 +32,7 @@ export interface SmartChainData {
   } | null;
   isVisible: boolean;
   status: string | null;
+  collaboration?: Collaboration | null;
 }
 
 export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
@@ -191,6 +193,13 @@ export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
       >
         {language === "tr" ? "← Anasayfa" : "← Home"}
       </a>
+
+      {/* Co-branding bar — top center */}
+      {data.collaboration && (
+        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+          <CoBrandingBar collaboration={data.collaboration} />
+        </div>
+      )}
 
       {/* Main content area — single card */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4">

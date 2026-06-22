@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
+import CoBrandingBar, { type Collaboration } from "@/app/components/CoBrandingBar";
 import { useTranslation } from "@/providers/LanguageProvider";
 import VCardField from "@/app/components/VCardField";
 import { downloadVCard } from "@/lib/vcard-utils";
@@ -18,6 +19,7 @@ interface VCardProfile {
   phone: string | null;
   email: string | null;
   fields: VCardFieldData[];
+  collaboration?: Collaboration | null;
 }
 
 interface VCardProfilePageProps {
@@ -116,11 +118,15 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
       />
 
       <div className="w-full max-w-md relative z-10">
-        {/* Brand text — GSAP fade-in */}
+        {/* Brand text — GSAP fade-in / co-branding */}
         <div ref={brandTextRef} className="gsap-hidden text-center mb-10">
-          <span className="font-heading text-2xl font-light tracking-[0.15em] text-white/40">
-            {t("vcard.brand")}
-          </span>
+          {profile.collaboration ? (
+            <CoBrandingBar collaboration={profile.collaboration} />
+          ) : (
+            <span className="font-heading text-2xl font-light tracking-[0.15em] text-white/40">
+              {t("vcard.brand")}
+            </span>
+          )}
         </div>
 
         {/* Profile card — GSAP slide-up */}
@@ -227,16 +233,25 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
               onClick={() =>
                 downloadVCard(profile.name, profile.phone, profile.email, profile.fields)
               }
-              className="w-full mt-8 py-3 rounded-xl bg-[#D4A853]/15 border border-[#D4A853]/30
-                       hover:bg-[#D4A853]/25 transition-all cursor-pointer
+              className="w-full mt-8 py-3 rounded-xl transition-all cursor-pointer
                        flex items-center justify-center gap-2"
+              style={{
+                background: profile.collaboration?.brandPrimaryColor
+                  ? `${profile.collaboration.brandPrimaryColor}26`
+                  : "rgba(212,168,83,0.15)",
+                borderColor: profile.collaboration?.brandPrimaryColor
+                  ? `${profile.collaboration.brandPrimaryColor}4D`
+                  : "rgba(212,168,83,0.3)",
+                borderWidth: "1px",
+                borderStyle: "solid",
+              }}
             >
               <svg
                 width="18"
                 height="18"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="#D4A853"
+                stroke={profile.collaboration?.brandPrimaryColor || "#D4A853"}
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -245,7 +260,10 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
                 <polyline points="7 10 12 15 17 10" />
                 <line x1="12" y1="15" x2="12" y2="3" strokeDasharray="2 2" />
               </svg>
-              <span className="font-body text-sm font-semibold tracking-wide uppercase text-[#D4A853]">
+              <span
+                className="font-body text-sm font-semibold tracking-wide uppercase"
+                style={{ color: profile.collaboration?.brandPrimaryColor || "#D4A853" }}
+              >
                 {t("vcard.addContact")}
               </span>
             </button>
