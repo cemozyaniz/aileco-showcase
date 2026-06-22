@@ -36,6 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# cPanel deployment artifacts
+*.zip
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
