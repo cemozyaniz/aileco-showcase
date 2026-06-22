@@ -16,9 +16,9 @@ export default function CoBrandingBar({
   return (
     <div className="flex items-center justify-center gap-3 mb-6">
       <span className="font-heading text-xl text-white/70 font-light tracking-[0.15em]">
-        AILECO
+        aileco
       </span>
-      <span className="font-heading text-lg text-white/30">×</span>
+      <span className="font-heading text-lg text-white/30">x</span>
       <span
         className="font-heading text-xl font-light tracking-[0.15em]"
         style={{ color: accentColor }}
