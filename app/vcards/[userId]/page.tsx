@@ -4,10 +4,21 @@ import VCardProfilePage from "./VCardProfilePage";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
+interface VCardUserData {
+  name: string;
+  phoneNumber: string | null;
+  email: string | null;
+}
+
 interface VCardFieldData {
   label: string;
   value: string;
   fieldType: string;
+}
+
+interface VCardApiResponse {
+  user: VCardUserData;
+  fields: VCardFieldData[];
 }
 
 interface VCardProfile {
@@ -25,35 +36,13 @@ async function getVCardProfile(userId: string): Promise<VCardProfile | null> {
 
     if (!res.ok) return null;
 
-    const data: VCardFieldData[] = await res.json();
-
-    if (!Array.isArray(data) || data.length === 0) return null;
-
-    let name = "";
-    let phone: string | null = null;
-    let email: string | null = null;
-    const extraFields: VCardFieldData[] = [];
-
-    for (const field of data) {
-      if (field.fieldType === "phone") {
-        phone = field.value;
-      } else if (field.fieldType === "email") {
-        email = field.value;
-      } else {
-        extraFields.push(field);
-      }
-    }
-
-    const nameField = data.find((f) => f.label.toLowerCase() === "name" || f.fieldType === "custom");
-    if (nameField) {
-      name = nameField.value;
-    }
+    const data: VCardApiResponse = await res.json();
 
     return {
-      name: name || `AILE-${userId.padStart(5, "0")}`,
-      phone,
-      email,
-      fields: extraFields,
+      name: data.user?.name || `AILE-${userId.padStart(5, "0")}`,
+      phone: data.user?.phoneNumber || null,
+      email: data.user?.email || null,
+      fields: data.fields || [],
     };
   } catch {
     return null;
