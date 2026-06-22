@@ -1,7 +1,4 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/aileco/repositories/aileco-showcase
-    - cd $DEPLOYPATH
-    - /usr/local/bin/npm install --production=false
-    - /usr/local/bin/npm run build
+    - echo "Local build deployed. Build artifacts (.next) are committed to the repository. Node.js App restart handles serving the new build."

@@ -1,0 +1,12 @@
+{
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found",
+  "/destek/page": "/destek",
+  "/favicon.ico/route": "/favicon.ico",
+  "/gizlilik/page": "/gizlilik",
+  "/kullanim/page": "/kullanim",
+  "/page": "/",
+  "/sifre-sifirlama/page": "/sifre-sifirlama",
+  "/smartchain/[id]/page": "/smartchain/[id]",
+  "/vcards/[userId]/page": "/vcards/[userId]"
+}
