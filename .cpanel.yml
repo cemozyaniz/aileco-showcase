@@ -1,4 +1,4 @@
 ---
 deployment:
   tasks:
-    - echo "Local build deployed. Build artifacts (.next) are committed to the repository. Node.js App restart handles serving the new build."
+    - echo "Standalone deployment ready. Build artifacts committed to repository."

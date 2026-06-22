@@ -13,7 +13,9 @@
 # testing
 /coverage
 
-# next.js
+# next.js — ignore all build output except standalone/ for zero-dependency cPanel deploys
+/.next/*
+!/.next/standalone/
 /out/
 
 # production
