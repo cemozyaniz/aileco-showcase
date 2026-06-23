@@ -21,7 +21,12 @@ export default function PetSection({ scrollRef }: PetSectionProps) {
   const inView = useInView(ref, { once: true, margin: "-15%" });
   const { t } = useTranslation();
   const { scrollYProgress } = useScroll({ target: scrollRef, offset: ["start start", "end end"] });
-  const opacity = useTransform(scrollYProgress, [0.05, 0.2, 0.8, 0.95], [0, 1, 1, 0]);
+
+  // Wider fade range: visible from 0 to 0.15, stays, fades out 0.85 to 1
+  const opacity = useTransform(scrollYProgress, [0, 0.15, 0.85, 1], [0, 1, 1, 0]);
+
+  // Subtle parallax for the pet image
+  const imgY = useTransform(scrollYProgress, [0, 1], [60, -60]);
 
   return (
     <div ref={ref} className="relative w-full flex items-center justify-center px-6 py-10">
@@ -53,6 +58,7 @@ export default function PetSection({ scrollRef }: PetSectionProps) {
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8, delay: 0.3 }}
+          style={{ y: imgY }}
         >
           <img
             src="/images/smartchain-on-pet.png"

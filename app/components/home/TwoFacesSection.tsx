@@ -34,6 +34,31 @@ export default function TwoFacesSection({ scrollRef }: TwoFacesSectionProps) {
   const text1Opacity = useTransform(scrollYProgress, [0.38, 0.48], [1, 0]);
   const text2Opacity = useTransform(scrollYProgress, [0.55, 0.65, 0.85, 0.95], [0, 1, 1, 0]);
 
+  // ─── Gold pulse shaft before flip (0.33–0.43) ──────────────────
+  const pulseShaftX = useTransform(scrollYProgress, [0.33, 0.38, 0.43, 0.48], [0, 1, 1, 0]);
+  const pulseShaftOpacity = useTransform(scrollYProgress, [0.33, 0.38, 0.43, 0.48], [0, 0.6, 0.6, 0]);
+
+  // ─── 2-segment progress dots: Front / Back ─────────────────────
+  const dotsOpacity = useTransform(scrollYProgress, [0.08, 0.18, 0.82, 0.92], [0, 1, 1, 0]);
+
+  const dot1Scale = useTransform(scrollYProgress, [0.08, 0.20, 0.40, 0.45], [0.5, 1.2, 1.2, 0.5]);
+  const dot2Scale = useTransform(scrollYProgress, [0.38, 0.52, 0.80, 0.90], [0.5, 1.2, 1.2, 0.5]);
+
+  const dot1Opacity = useTransform(scrollYProgress, [0.08, 0.20, 0.40, 0.45], [0.2, 1, 1, 0.2]);
+  const dot2Opacity = useTransform(scrollYProgress, [0.38, 0.52, 0.80, 0.90], [0.2, 1, 1, 0.2]);
+
+  const dot1Color = useTransform(
+    scrollYProgress,
+    [0.08, 0.20, 0.45],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]
+  );
+  const dot2Color = useTransform(
+    scrollYProgress,
+    [0.38, 0.52, 0.90],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(212,168,83,1)"]
+  );
+
+  // ─── Typewriter ────────────────────────────────────────────────
   useMotionValueEvent(scrollYProgress, "change", (v) => {
     const t1 = Math.floor(((v - 0.10) / 0.30) * fullText1Length);
     setText1CharCount(Math.max(0, Math.min(t1, fullText1Length)));
@@ -79,6 +104,34 @@ export default function TwoFacesSection({ scrollRef }: TwoFacesSectionProps) {
               </p>
             </motion.div>
           </div>
+        </div>
+
+        {/* ─── Gold pulse shaft before card flip ────────────────── */}
+        <motion.div
+          style={{ scaleX: pulseShaftX, opacity: pulseShaftOpacity }}
+          className="h-px bg-gradient-to-r from-transparent via-[#D4A853] to-transparent origin-center mt-8 max-w-[200px] mx-auto"
+        />
+      </motion.div>
+
+      {/* ─── 2-segment progress dots: Front / Back ──────────────── */}
+      <motion.div
+        style={{ opacity: dotsOpacity }}
+        className="absolute bottom-10 flex items-center gap-0"
+      >
+        <div className="flex flex-col items-center gap-1.5">
+          <motion.div
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot1Scale, opacity: dot1Opacity, backgroundColor: dot1Color }}
+          />
+          <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Front</span>
+        </div>
+        <div className="w-8 h-px bg-white/10 mt-[-14px]" />
+        <div className="flex flex-col items-center gap-1.5">
+          <motion.div
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot2Scale, opacity: dot2Opacity, backgroundColor: dot2Color }}
+          />
+          <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Back</span>
         </div>
       </motion.div>
     </div>

@@ -9,6 +9,10 @@ export const translations = {
 
     "product.meet": "Meet Smartchain",
     "product.moreThan": "More than a keychain.",
+    "product.img2.heading": "Built for Every Moment",
+    "product.img2.sub": "Designed to go wherever you go.",
+    "product.img3.heading": "Always Within Reach",
+    "product.img3.sub": "One scan connects you to what matters.",
 
     "twoFaces.line1": "One side tells your story.",
     "twoFaces.line2": "The other connects you to the world.",
@@ -225,6 +229,10 @@ export const translations = {
 
     "product.meet": "Smartchain\u2019le Tan\u0131\u015f\u0131n",
     "product.moreThan": "Bir anahtarlıktan \u00f6tesi.",
+    "product.img2.heading": "Her An İçin Tasarlandı",
+    "product.img2.sub": "Nereye giderseniz gidin, yanınızda.",
+    "product.img3.heading": "Her Zaman Erişilebilir",
+    "product.img3.sub": "Tek taramayla önemli olana bağlanın.",
 
     "twoFaces.line1": "Bir y\u00fcz\u00fc hikayenizi anlat\u0131r; ",
     "twoFaces.line2": "di\u011fer y\u00fcz\u00fc ise sizi d\u00fcnyaya ba\u011flar.",

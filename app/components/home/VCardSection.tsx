@@ -39,11 +39,12 @@ export default function VCardSection({ scrollRef }: VCardSectionProps) {
   const qrGlowOpacity = useTransform(scrollYProgress, [0.1, 0.2, 0.32, 0.38], [0, 0.15, 0.15, 0]);
   const qrCaptionOpacity = useTransform(scrollYProgress, [0.1, 0.2, 0.28, 0.36], [0, 1, 1, 0]);
 
-  const fieldsOpacity = useTransform(scrollYProgress, [0.33, 0.48, 0.85, 0.95], [0, 1, 1, 0]);
-  const fieldsY = useTransform(scrollYProgress, [0.33, 0.48], [20, 0]);
+  // Fields start appearing earlier (0.25 instead of 0.33) to overlap with QR
+  const fieldsOpacity = useTransform(scrollYProgress, [0.25, 0.40, 0.85, 0.95], [0, 1, 1, 0]);
+  const fieldsY = useTransform(scrollYProgress, [0.25, 0.40], [20, 0]);
 
   const fieldAnimations = fields.map((_, i) => {
-    const start = 0.38 + i * 0.04;
+    const start = 0.28 + i * 0.04; // shifted earlier accordingly
     const peak = start + 0.06;
     return {
       opacity: useTransform(scrollYProgress, [start, peak, peak + 0.02, 0.85, 0.95], [0, 0.5, 1, 1, 0]),
@@ -51,6 +52,26 @@ export default function VCardSection({ scrollRef }: VCardSectionProps) {
       scale: useTransform(scrollYProgress, [start, peak], [0.85, 1]),
     };
   });
+
+  // ─── 2-segment progress dots: Scan / Fields ────────────────────
+  const dotsOpacity = useTransform(scrollYProgress, [0.06, 0.16, 0.85, 0.95], [0, 1, 1, 0]);
+
+  const dot1Scale = useTransform(scrollYProgress, [0.06, 0.15, 0.30, 0.38], [0.5, 1.2, 1.2, 0.5]);
+  const dot2Scale = useTransform(scrollYProgress, [0.30, 0.45, 0.80, 0.90], [0.5, 1.2, 1.2, 0.5]);
+
+  const dot1Opacity = useTransform(scrollYProgress, [0.06, 0.15, 0.30, 0.38], [0.2, 1, 1, 0.2]);
+  const dot2Opacity = useTransform(scrollYProgress, [0.30, 0.45, 0.80, 0.90], [0.2, 1, 1, 0.2]);
+
+  const dot1Color = useTransform(
+    scrollYProgress,
+    [0.06, 0.15, 0.38],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]
+  );
+  const dot2Color = useTransform(
+    scrollYProgress,
+    [0.30, 0.45, 0.90],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(212,168,83,1)"]
+  );
 
   return (
     <div ref={ref} className="relative w-full flex flex-col items-center px-4 md:px-6 py-10 min-h-screen">
@@ -123,8 +144,9 @@ export default function VCardSection({ scrollRef }: VCardSectionProps) {
                     bgColor="transparent"
                   />
                 </div>
+                {/* Enhanced scan line — 2px gold gradient */}
                 <motion.div
-                  className="absolute left-0 right-0 h-px bg-[#D4A853]/60 shadow-[0_0_12px_rgba(212,168,83,0.5)] pointer-events-none"
+                  className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#D4A853]/80 to-transparent shadow-[0_0_16px_rgba(212,168,83,0.6)] pointer-events-none"
                   style={{ top: scanLineY }}
                 />
               </div>
@@ -144,6 +166,28 @@ export default function VCardSection({ scrollRef }: VCardSectionProps) {
           </motion.div>
         </div>
       </div>
+
+      {/* ─── 2-segment progress dots: Scan / Fields ──────────────── */}
+      <motion.div
+        style={{ opacity: dotsOpacity }}
+        className="relative z-10 flex items-center gap-0 mt-8 shrink-0"
+      >
+        <div className="flex flex-col items-center gap-1.5">
+          <motion.div
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot1Scale, opacity: dot1Opacity, backgroundColor: dot1Color }}
+          />
+          <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Scan</span>
+        </div>
+        <div className="w-8 h-px bg-white/10 mt-[-14px]" />
+        <div className="flex flex-col items-center gap-1.5">
+          <motion.div
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot2Scale, opacity: dot2Opacity, backgroundColor: dot2Color }}
+          />
+          <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Fields</span>
+        </div>
+      </motion.div>
     </div>
   );
 }

@@ -37,7 +37,7 @@ export default function Home() {
         <HeroSection onExplore={scrollToProduct} heroToProductProgress={heroToProductProgress} />
       </div>
 
-      <div id="product-reveal" ref={productRevealRef} className="relative" style={{ height: "150vh" }}>
+      <div id="product-reveal" ref={productRevealRef} className="relative" style={{ height: "200vh" }}>
         <div className="sticky top-0 h-screen overflow-hidden">
           <ProductRevealSection scrollRef={productRevealRef} heroToProductProgress={heroToProductProgress} />
         </div>
