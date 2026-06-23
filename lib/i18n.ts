@@ -51,7 +51,7 @@ export const translations = {
     "cta.appStore": "App Store",
     "cta.googlePlay": "Google Play",
     "cta.comingSoon": "Coming Soon",
-    "cta.copyright": "\u00a9 2025 AileCo. All rights reserved.",
+    "cta.copyright": "\u00a9 2026 AileCo. All rights reserved.",
     "cta.tagline": "Scan. Connect. Protect.",
     "cta.feature1": "Scan any Smartchain QR code instantly",
     "cta.feature2": "Manage your digital profile on the go",

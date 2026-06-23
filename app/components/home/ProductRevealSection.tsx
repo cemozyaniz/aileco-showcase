@@ -82,14 +82,6 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
 
   const counterOpacity = useTransform(scrollYProgress, [0.03, 0.08, 0.85, 0.95], [0, 1, 1, 0]);
 
-  // ─── Hero Logo Bridge ───────────────────────────────────────────
-
-  const progress = heroToProductProgress || useMotionValue(0);
-
-  const incomingLogoOpacity = useTransform(progress, [0.75, 0.95, 1.1, 1.5], [0, 1, 1, 1]);
-  const incomingLogoY = useTransform(progress, [0.75, 0.95], [-30, 0]);
-  const incomingLogoScale = useTransform(progress, [0.75, 0.95], [0.6, 1]);
-
   // ─── Progress Dots (scale 0.5→1.2, opacity 0.2→1.0) ────────────
 
   const dotsOpacity = useTransform(scrollYProgress, [0.05, 0.15, 0.85, 0.95], [0, 1, 1, 0]);
@@ -126,16 +118,6 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
       />
 
       <div className="relative z-10 w-full h-full flex flex-col items-center">
-        <motion.span
-          className="mt-6 mb-2 font-heading text-xl md:text-2xl lg:text-3xl font-light tracking-[0.12em] text-white/60 select-none pointer-events-none"
-          style={{
-            opacity: incomingLogoOpacity,
-            y: incomingLogoY,
-            scale: incomingLogoScale,
-          }}
-        >
-          aileco
-        </motion.span>
 
         {/* ─── Text Block — one position, cross-fading ─────────────── */}
         <div className="relative text-center px-6 pointer-events-none min-h-[80px] flex items-center justify-center">
