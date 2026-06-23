@@ -16,7 +16,7 @@ interface ProductRevealSectionProps {
   heroToProductProgress?: MotionValue<number>;
 }
 
-export default function ProductRevealSection({ scrollRef, heroToProductProgress }: ProductRevealSectionProps) {
+export default function ProductRevealSection({ scrollRef }: ProductRevealSectionProps) {
   const { t } = useTranslation();
   const { scrollYProgress } = useScroll({
     target: scrollRef,
@@ -34,19 +34,19 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
   const img3Opacity = useTransform(scrollYProgress, [0.59, 0.60, 0.70, 0.71], [0, 0, 1, 1]);
   const img3Scale = useTransform(scrollYProgress, [0.59, 0.65, 0.70, 0.71], [1, 1.02, 1.0, 1.0]);
 
-  // ─── Per-Image Text ─────────────────────────────────────────────
+  // ─── Per-Image Text (tighter fade boundaries for clean switching) ─
 
-  // Image 1 — visible 0.05–0.35
-  const text1Opacity = useTransform(scrollYProgress, [0.05, 0.15, 0.25, 0.35], [0, 1, 1, 0]);
-  const text1Y = useTransform(scrollYProgress, [0.05, 0.15], [40, 0]);
+  // Image 1 text — fully visible 0.05–0.22, fully gone by 0.28
+  const text1Opacity = useTransform(scrollYProgress, [0.05, 0.15, 0.22, 0.28], [0, 1, 1, 0]);
+  const text1Y = useTransform(scrollYProgress, [0.05, 0.15], [30, 0]);
 
-  // Image 2 — visible 0.28–0.63
-  const text2Opacity = useTransform(scrollYProgress, [0.28, 0.38, 0.55, 0.63], [0, 1, 1, 0]);
-  const text2Y = useTransform(scrollYProgress, [0.28, 0.38], [40, 0]);
+  // Image 2 text — starts at 0.32, fully visible, gone by 0.58
+  const text2Opacity = useTransform(scrollYProgress, [0.32, 0.42, 0.55, 0.58], [0, 1, 1, 0]);
+  const text2Y = useTransform(scrollYProgress, [0.32, 0.42], [30, 0]);
 
-  // Image 3 — visible 0.58–0.95
-  const text3Opacity = useTransform(scrollYProgress, [0.58, 0.65, 0.80, 0.95], [0, 1, 1, 0]);
-  const text3Y = useTransform(scrollYProgress, [0.58, 0.65], [40, 0]);
+  // Image 3 text — starts at 0.62
+  const text3Opacity = useTransform(scrollYProgress, [0.62, 0.72, 0.80, 0.95], [0, 1, 1, 0]);
+  const text3Y = useTransform(scrollYProgress, [0.62, 0.72], [30, 0]);
 
   // ─── Background Color ───────────────────────────────────────────
 
@@ -71,7 +71,7 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
     { opacity: img3Opacity, scale: img3Scale },
   ];
 
-  // ─── Image Counter ──────────────────────────────────────────────
+  // ─── Active Image State (controls which text renders) ───────────
 
   const [activeImage, setActiveImage] = useState(1);
   useMotionValueEvent(scrollYProgress, "change", (v) => {
@@ -118,44 +118,38 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
       />
 
       <div className="relative z-10 w-full h-full flex flex-col items-center">
-
-        {/* ─── Text Block — one position, cross-fading ─────────────── */}
-        <div className="relative text-center px-6 pointer-events-none min-h-[80px] flex items-center justify-center">
-          <motion.div
-            style={{ y: text1Y, opacity: text1Opacity }}
-            className="absolute left-0 right-0"
-          >
-            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
-              {t("product.meet")}
-            </h2>
-            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
-              {t("product.moreThan")}
-            </p>
-          </motion.div>
-
-          <motion.div
-            style={{ y: text2Y, opacity: text2Opacity }}
-            className="absolute left-0 right-0"
-          >
-            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
-              {t("product.img2.heading")}
-            </h2>
-            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
-              {t("product.img2.sub")}
-            </p>
-          </motion.div>
-
-          <motion.div
-            style={{ y: text3Y, opacity: text3Opacity }}
-            className="absolute left-0 right-0"
-          >
-            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
-              {t("product.img3.heading")}
-            </h2>
-            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
-              {t("product.img3.sub")}
-            </p>
-          </motion.div>
+        {/* ─── Text Block — only active image text renders ──────────── */}
+        <div className="flex items-center justify-center text-center px-6 pointer-events-none min-h-[100px] w-full max-w-lg mx-auto">
+          {activeImage === 1 && (
+            <motion.div style={{ y: text1Y, opacity: text1Opacity }}>
+              <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white tracking-tight leading-tight">
+                {t("product.meet")}
+              </h2>
+              <p className="font-body text-sm sm:text-base font-light text-white/50 leading-relaxed mt-2">
+                {t("product.moreThan")}
+              </p>
+            </motion.div>
+          )}
+          {activeImage === 2 && (
+            <motion.div style={{ y: text2Y, opacity: text2Opacity }}>
+              <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white tracking-tight leading-tight">
+                {t("product.img2.heading")}
+              </h2>
+              <p className="font-body text-sm sm:text-base font-light text-white/50 leading-relaxed mt-2">
+                {t("product.img2.sub")}
+              </p>
+            </motion.div>
+          )}
+          {activeImage === 3 && (
+            <motion.div style={{ y: text3Y, opacity: text3Opacity }}>
+              <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white tracking-tight leading-tight">
+                {t("product.img3.heading")}
+              </h2>
+              <p className="font-body text-sm sm:text-base font-light text-white/50 leading-relaxed mt-2">
+                {t("product.img3.sub")}
+              </p>
+            </motion.div>
+          )}
         </div>
 
         {/* ─── Image Container ──────────────────────────────────────── */}
