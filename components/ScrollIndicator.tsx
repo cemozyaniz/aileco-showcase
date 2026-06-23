@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useScroll } from "framer-motion";
+import { useState } from "react";
+import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 
 interface ScrollIndicatorProps {
   fixed?: boolean;
@@ -8,18 +9,17 @@ interface ScrollIndicatorProps {
 
 export default function ScrollIndicator({ fixed = true }: ScrollIndicatorProps) {
   const { scrollYProgress } = useScroll();
+  const [hidden, setHidden] = useState(false);
 
-  if (!fixed && scrollYProgress.get() > 0.98) return null;
+  useMotionValueEvent(scrollYProgress, "change", (latest) => {
+    setHidden(latest > 0.1);
+  });
 
-  const containerClass = fixed
-    ? "fixed bottom-10 left-1/2 -translate-x-1/2 z-40"
-    : "inline-flex";
-
-  if (fixed && scrollYProgress.get() > 0.98) return null;
+  if (!fixed || hidden) return null;
 
   return (
     <motion.button
-      className={`${containerClass} flex flex-col items-center cursor-pointer bg-transparent border-none p-0`}
+      className="fixed bottom-10 left-1/2 -translate-x-1/2 z-40 flex flex-col items-center cursor-pointer bg-transparent border-none p-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

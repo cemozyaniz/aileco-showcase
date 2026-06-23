@@ -143,10 +143,10 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
             style={{ y: text1Y, opacity: text1Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
               {t("product.meet")}
             </h2>
-            <p className="font-body text-lg sm:text-xl font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
               {t("product.moreThan")}
             </p>
           </motion.div>
@@ -155,10 +155,10 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
             style={{ y: text2Y, opacity: text2Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
               {t("product.img2.heading")}
             </h2>
-            <p className="font-body text-lg sm:text-xl font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
               {t("product.img2.sub")}
             </p>
           </motion.div>
@@ -167,10 +167,10 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
             style={{ y: text3Y, opacity: text3Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
               {t("product.img3.heading")}
             </h2>
-            <p className="font-body text-lg sm:text-xl font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
               {t("product.img3.sub")}
             </p>
           </motion.div>
