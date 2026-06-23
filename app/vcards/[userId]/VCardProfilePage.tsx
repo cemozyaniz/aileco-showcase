@@ -15,7 +15,7 @@ interface VCardFieldData {
 }
 
 interface VCardProfile {
-  name: string;
+  name: string | null;
   phone: string | null;
   email: string | null;
   fields: VCardFieldData[];
@@ -96,7 +96,7 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
     if (!downloadTriggered.current && hasAnyData) {
       downloadTriggered.current = true;
       const timer = setTimeout(() => {
-        downloadVCard(profile.name, profile.phone, profile.email, profile.fields);
+        downloadVCard(profile.name || "Contact", profile.phone, profile.email, profile.fields);
       }, 500);
       return () => clearTimeout(timer);
     }
@@ -135,7 +135,7 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
           className="gsap-hidden bg-white/[0.04] backdrop-blur-md rounded-3xl border border-white/[0.08] p-8 md:p-10"
         >
           <h1 className="font-heading text-3xl md:text-4xl font-light text-white text-center mb-2">
-            {profile.name}
+            {profile.name || `AILE-${userId.padStart(5, "0")}`}
           </h1>
           <p className="font-body text-sm text-white/25 text-center mb-8">
             AILE-{userId.padStart(5, "0")}
@@ -231,7 +231,7 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
           {hasAnyData && (
             <button
               onClick={() =>
-                downloadVCard(profile.name, profile.phone, profile.email, profile.fields)
+                downloadVCard(profile.name || "Contact", profile.phone, profile.email, profile.fields)
               }
               className="w-full mt-8 py-3 rounded-xl transition-all cursor-pointer
                        flex items-center justify-center gap-2"

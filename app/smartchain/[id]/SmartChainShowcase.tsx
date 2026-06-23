@@ -25,7 +25,7 @@ export interface SmartChainData {
   createdAt: string | null;
   owner: {
     id: number;
-    name: string;
+    name: string | null;
     phoneNumber: string | null;
     email: string | null;
     vCardFields?: VCardField[];
@@ -223,7 +223,7 @@ export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
             isRevealed={isRevealed}
             cardScale={isRevealed ? 0.9 : 1}
             showTilt={showTilt}
-            ownerName={data.owner?.name}
+            ownerName={data.owner?.name ?? undefined}
             ownerPhoneNumber={data.owner?.phoneNumber}
             ownerEmail={data.owner?.email}
             ownerVCardFields={data.owner?.vCardFields}

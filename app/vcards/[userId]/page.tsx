@@ -6,7 +6,7 @@ import type { Collaboration } from "@/app/components/CoBrandingBar";
 const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 interface VCardUserData {
-  name: string;
+  name: string | null;
   phoneNumber: string | null;
   email: string | null;
 }
@@ -24,7 +24,7 @@ interface VCardApiResponse {
 }
 
 interface VCardProfile {
-  name: string;
+  name: string | null;
   phone: string | null;
   email: string | null;
   fields: VCardFieldData[];
