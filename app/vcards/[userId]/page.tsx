@@ -9,6 +9,7 @@ interface VCardUserData {
   name: string | null;
   phoneNumber: string | null;
   email: string | null;
+  memberId?: string | null;
 }
 
 interface VCardFieldData {
@@ -27,6 +28,7 @@ interface VCardProfile {
   name: string | null;
   phone: string | null;
   email: string | null;
+  memberId?: string | null;
   fields: VCardFieldData[];
   collaboration?: Collaboration | null;
 }
@@ -42,9 +44,10 @@ async function getVCardProfile(userId: string): Promise<VCardProfile | null> {
     const data: VCardApiResponse = await res.json();
 
     return {
-      name: data.user?.name || `AILE-${userId.padStart(5, "0")}`,
+      name: data.user?.name || `AILE-${userId.slice(0, 5).toUpperCase()}`,
       phone: data.user?.phoneNumber || null,
       email: data.user?.email || null,
+      memberId: data.user?.memberId || null,
       fields: data.fields || [],
       collaboration: data.collaboration || null,
     };

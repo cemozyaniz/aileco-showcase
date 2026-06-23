@@ -18,6 +18,7 @@ interface VCardProfile {
   name: string | null;
   phone: string | null;
   email: string | null;
+  memberId?: string | null;
   fields: VCardFieldData[];
   collaboration?: Collaboration | null;
 }
@@ -135,10 +136,10 @@ export default function VCardProfilePage({ profile, userId }: VCardProfilePagePr
           className="gsap-hidden bg-white/[0.04] backdrop-blur-md rounded-3xl border border-white/[0.08] p-8 md:p-10"
         >
           <h1 className="font-heading text-3xl md:text-4xl font-light text-white text-center mb-2">
-            {profile.name || `AILE-${userId.padStart(5, "0")}`}
+            {profile.name || `AILE-${userId.slice(0, 5).toUpperCase()}`}
           </h1>
           <p className="font-body text-sm text-white/25 text-center mb-8">
-            AILE-{userId.padStart(5, "0")}
+            {profile.memberId || `AILE-${userId.slice(0, 5).toUpperCase()}`}
           </p>
 
           <div className="w-16 h-px bg-white/10 mx-auto mb-8" />
