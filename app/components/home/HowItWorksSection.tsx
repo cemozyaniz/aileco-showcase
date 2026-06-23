@@ -111,13 +111,18 @@ export default function HowItWorksSection({ scrollRef }: HowItWorksSectionProps)
 
   const dotsOpacity = useTransform(scrollYProgress, [0.15, 0.25, 0.82, 0.92], [0, 1, 1, 0]);
 
-  const dot1Scale = useTransform(scrollYProgress, [0.12, 0.25, 0.35, 0.45], [0.6, 1, 1, 0.6]);
-  const dot2Scale = useTransform(scrollYProgress, [0.24, 0.35, 0.55, 0.65, 0.75], [0.6, 0.6, 1, 1, 0.6]);
-  const dot3Scale = useTransform(scrollYProgress, [0.54, 0.65, 0.75, 0.82], [0.6, 0.6, 1, 1]);
+  // Dots — scale 0.5→1.2, opacity 0.2→1.0
+  const dot1Scale = useTransform(scrollYProgress, [0.12, 0.25, 0.35, 0.45], [0.5, 1.2, 1.2, 0.5]);
+  const dot2Scale = useTransform(scrollYProgress, [0.24, 0.35, 0.55, 0.65, 0.75], [0.5, 0.5, 1.2, 1.2, 0.5]);
+  const dot3Scale = useTransform(scrollYProgress, [0.54, 0.65, 0.75, 0.82], [0.5, 0.5, 1.2, 1.2]);
 
-  const dot1Color = useTransform(scrollYProgress, [0.12, 0.25, 0.35], ["rgba(212,168,83,1)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]);
-  const dot2Color = useTransform(scrollYProgress, [0.24, 0.35, 0.55, 0.65], ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]);
-  const dot3Color = useTransform(scrollYProgress, [0.54, 0.65, 0.75], ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(212,168,83,1)"]);
+  const dot1Opacity = useTransform(scrollYProgress, [0.12, 0.25, 0.35, 0.45], [0.2, 1, 1, 0.2]);
+  const dot2Opacity = useTransform(scrollYProgress, [0.24, 0.35, 0.55, 0.65, 0.75], [0.2, 0.2, 1, 1, 0.2]);
+  const dot3Opacity = useTransform(scrollYProgress, [0.54, 0.65, 0.75, 0.82], [0.2, 0.2, 1, 1]);
+
+  const dot1Color = useTransform(scrollYProgress, [0.12, 0.25, 0.35], ["rgba(212,168,83,1)", "rgba(212,168,83,1)", "rgba(255,255,255,1)"]);
+  const dot2Color = useTransform(scrollYProgress, [0.24, 0.35, 0.55, 0.65], ["rgba(255,255,255,1)", "rgba(212,168,83,1)", "rgba(212,168,83,1)", "rgba(255,255,255,1)"]);
+  const dot3Color = useTransform(scrollYProgress, [0.54, 0.65, 0.75], ["rgba(255,255,255,1)", "rgba(212,168,83,1)", "rgba(212,168,83,1)"]);
 
   return (
     <div ref={ref} className="relative w-full flex flex-col items-center px-6 py-16 min-h-screen">
@@ -164,18 +169,18 @@ export default function HowItWorksSection({ scrollRef }: HowItWorksSectionProps)
           className="flex items-center gap-0 mt-6 md:mt-8"
         >
           <motion.div
-            className="w-2 h-2 rounded-full"
-            style={{ scale: dot1Scale, backgroundColor: dot1Color }}
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot1Scale, opacity: dot1Opacity, backgroundColor: dot1Color }}
           />
           <div className="w-8 h-px bg-white/10" />
           <motion.div
-            className="w-2 h-2 rounded-full"
-            style={{ scale: dot2Scale, backgroundColor: dot2Color }}
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot2Scale, opacity: dot2Opacity, backgroundColor: dot2Color }}
           />
           <div className="w-8 h-px bg-white/10" />
           <motion.div
-            className="w-2 h-2 rounded-full"
-            style={{ scale: dot3Scale, backgroundColor: dot3Color }}
+            className="w-2.5 h-2.5 rounded-full"
+            style={{ scale: dot3Scale, opacity: dot3Opacity, backgroundColor: dot3Color }}
           />
         </motion.div>
       </div>

@@ -96,6 +96,33 @@ export default function LostStolenSection({ scrollRef }: LostStolenSectionProps)
     ([r, g, b, a]) => `rgba(${Math.round(r as number)}, ${Math.round(g as number)}, ${Math.round(b as number)}, ${a})`
   );
 
+  // ─── 3 progress dots: Normal / Lost / Stolen ────────────────────
+  const dotsOpacity = useTransform(scrollYProgress, [0.08, 0.18, 0.85, 0.95], [0, 1, 1, 0]);
+
+  const dot1Scale = useTransform(scrollYProgress, [0.08, 0.20, 0.30, 0.38], [0.5, 1.2, 1.2, 0.5]);
+  const dot2Scale = useTransform(scrollYProgress, [0.28, 0.38, 0.55, 0.63], [0.5, 1.2, 1.2, 0.5]);
+  const dot3Scale = useTransform(scrollYProgress, [0.58, 0.68, 0.82, 0.90], [0.5, 1.2, 1.2, 0.5]);
+
+  const dot1Opacity = useTransform(scrollYProgress, [0.08, 0.20, 0.30, 0.38], [0.2, 1, 1, 0.2]);
+  const dot2Opacity = useTransform(scrollYProgress, [0.28, 0.38, 0.55, 0.63], [0.2, 1, 1, 0.2]);
+  const dot3Opacity = useTransform(scrollYProgress, [0.58, 0.68, 0.82, 0.90], [0.2, 1, 1, 0.2]);
+
+  const dot1Color = useTransform(
+    scrollYProgress,
+    [0.08, 0.20, 0.38],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]
+  );
+  const dot2Color = useTransform(
+    scrollYProgress,
+    [0.28, 0.38, 0.63],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(255,255,255,0.2)"]
+  );
+  const dot3Color = useTransform(
+    scrollYProgress,
+    [0.58, 0.68, 0.90],
+    ["rgba(255,255,255,0.2)", "rgba(212,168,83,1)", "rgba(212,168,83,1)"]
+  );
+
   return (
     <div ref={ref} className="relative w-full px-6 py-16 min-h-screen flex flex-col">
       <div
@@ -136,6 +163,36 @@ export default function LostStolenSection({ scrollRef }: LostStolenSectionProps)
             <ModeCard mode="stolen" />
           </motion.div>
         </div>
+
+        {/* ─── 3 progress dots: Normal / Lost / Stolen ──────────── */}
+        <motion.div
+          style={{ opacity: dotsOpacity }}
+          className="relative z-10 flex items-center gap-0 mt-8 shrink-0"
+        >
+          <div className="flex flex-col items-center gap-1.5">
+            <motion.div
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ scale: dot1Scale, opacity: dot1Opacity, backgroundColor: dot1Color }}
+            />
+            <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Normal</span>
+          </div>
+          <div className="w-8 h-px bg-white/10 mt-[-14px]" />
+          <div className="flex flex-col items-center gap-1.5">
+            <motion.div
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ scale: dot2Scale, opacity: dot2Opacity, backgroundColor: dot2Color }}
+            />
+            <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Lost</span>
+          </div>
+          <div className="w-8 h-px bg-white/10 mt-[-14px]" />
+          <div className="flex flex-col items-center gap-1.5">
+            <motion.div
+              className="w-2.5 h-2.5 rounded-full"
+              style={{ scale: dot3Scale, opacity: dot3Opacity, backgroundColor: dot3Color }}
+            />
+            <span className="font-body text-[10px] tracking-[0.12em] uppercase text-white/30">Stolen</span>
+          </div>
+        </motion.div>
       </div>
     </div>
   );

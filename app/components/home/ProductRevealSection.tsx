@@ -138,15 +138,15 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
         </motion.span>
 
         {/* ─── Text Block — one position, cross-fading ─────────────── */}
-        <div className="relative text-center px-6 pointer-events-none min-h-[120px] flex items-center justify-center">
+        <div className="relative text-center px-6 pointer-events-none min-h-[80px] flex items-center justify-center">
           <motion.div
             style={{ y: text1Y, opacity: text1Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
               {t("product.meet")}
             </h2>
-            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
               {t("product.moreThan")}
             </p>
           </motion.div>
@@ -155,10 +155,10 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
             style={{ y: text2Y, opacity: text2Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
               {t("product.img2.heading")}
             </h2>
-            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
               {t("product.img2.sub")}
             </p>
           </motion.div>
@@ -167,10 +167,10 @@ export default function ProductRevealSection({ scrollRef, heroToProductProgress 
             style={{ y: text3Y, opacity: text3Opacity }}
             className="absolute left-0 right-0"
           >
-            <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white tracking-tight leading-tight">
+            <h2 className="font-heading text-xl sm:text-2xl md:text-3xl lg:text-4xl font-light text-white tracking-tight leading-tight">
               {t("product.img3.heading")}
             </h2>
-            <p className="font-body text-base sm:text-lg font-light text-white/50 leading-relaxed mt-2">
+            <p className="font-body text-xs sm:text-sm font-light text-white/50 leading-relaxed mt-1">
               {t("product.img3.sub")}
             </p>
           </motion.div>
