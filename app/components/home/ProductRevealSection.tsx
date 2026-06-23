@@ -119,7 +119,7 @@ export default function ProductRevealSection({ scrollRef }: ProductRevealSection
 
       <div className="relative z-10 w-full h-full flex flex-col items-center">
         {/* ─── Text Block — only active image text renders ──────────── */}
-        <div className="flex items-center justify-center text-center px-6 pointer-events-none min-h-[100px] w-full max-w-lg mx-auto">
+        <div className="flex items-center justify-center text-center px-6 pointer-events-none min-h-[100px] w-full max-w-lg mx-auto pt-16 md:pt-10">
           {activeImage === 1 && (
             <motion.div style={{ y: text1Y, opacity: text1Opacity }}>
               <h2 className="font-heading text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-light text-white tracking-tight leading-tight">
