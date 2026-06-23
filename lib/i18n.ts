@@ -271,7 +271,7 @@ export const translations = {
     "cta.appStore": "App Store",
     "cta.googlePlay": "Google Play",
     "cta.comingSoon": "Yak\u0131nda",
-    "cta.copyright": "\u00a9 2025 AileCo. T\u00fcm haklar\u0131 sakl\u0131d\u0131r.",
+    "cta.copyright": "\u00a9 2026 AileCo. T\u00fcm haklar\u0131 sakl\u0131d\u0131r.",
     "cta.tagline": "Tara. Ba\u011flan. Koru.",
     "cta.feature1": "Herhangi bir Smartchain QR kodunu an\u0131nda tara",
     "cta.feature2": "Dijital profilinizi hareket halindeyken y\u00f6netin",
