@@ -194,9 +194,9 @@ export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
         {language === "tr" ? "← Anasayfa" : "← Home"}
       </a>
 
-      {/* Co-branding bar — top center */}
+      {/* Co-branding bar — top center, stacks below buttons on mobile */}
       {data.collaboration && (
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+        <div className="fixed top-14 md:top-6 left-1/2 -translate-x-1/2 z-50">
           <CoBrandingBar collaboration={data.collaboration} />
         </div>
       )}

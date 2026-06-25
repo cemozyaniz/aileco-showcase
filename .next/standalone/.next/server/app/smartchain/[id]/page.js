@@ -1,6 +1,6 @@
 var R=require("../../../chunks/ssr/[turbopack]_runtime.js")("server/app/smartchain/[id]/page.js")
 R.c("server/chunks/ssr/[root-of-the-server]__d5980015._.js")
-R.c("server/chunks/ssr/_07dd16d9._.js")
+R.c("server/chunks/ssr/_1c331d48._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_9764e5f5._.js")
 R.c("server/chunks/ssr/_6139f1ce._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__1dd4f5fd._.js")
@@ -12,7 +12,8 @@ R.c("server/chunks/ssr/[root-of-the-server]__f992285d._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_9774470f._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_forbidden_45780354.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js")
+R.c("server/chunks/ssr/app_smartchain_[id]_layout_tsx_cde1e5a3._.js")
 R.c("server/chunks/ssr/_5f04da88._.js")
 R.c("server/chunks/ssr/_next-internal_server_app_smartchain_[id]_page_actions_67ced4aa.js")
-R.m(96312)
-module.exports=R.m(96312).exports
+R.m(10100)
+module.exports=R.m(10100).exports
