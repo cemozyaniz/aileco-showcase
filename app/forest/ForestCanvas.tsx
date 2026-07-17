@@ -18,7 +18,8 @@ const BG_COLOR = "#0B0B0B";
 const MAJOR_GRID_INTERVAL = 10;
 const MIN_ZOOM = 0.5;
 const MAX_ZOOM = 64;
-const MAX_VIEWPORT_SPAN = 20;
+const MAX_VIEWPORT_SPAN = 200;
+const MAX_TILES_PER_VIEWPORT = 6;
 const FETCH_DEBOUNCE_MS = 150;
 
 // --- Types ---
@@ -78,7 +79,9 @@ export default function ForestCanvas() {
 
     const newClaimed = new Map(claimedRef.current);
 
-    for (const chunk of chunks) {
+    // Cap tiles and fetch sequentially to avoid rate-limiting
+    const capped = chunks.slice(0, MAX_TILES_PER_VIEWPORT);
+    for (const chunk of capped) {
       try {
         const resp = await fetch(
           `${API_URL}/forest/plots?min_x=${chunk.mx}&max_x=${chunk.Mx}&min_y=${chunk.my}&max_y=${chunk.My}`
