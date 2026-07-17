@@ -2,5 +2,51 @@
   "version": 3,
   "middleware": {},
   "sortedMiddleware": [],
-  "functions": {}
+  "functions": {
+    "/forest/tree/[public_id]/og-image/route": {
+      "files": [
+        "server/middleware-build-manifest.js",
+        "server/interception-route-rewrite-manifest.js",
+        "required-server-files.js",
+        "server/server-reference-manifest.js",
+        "server/app/forest/tree/[public_id]/og-image/route_client-reference-manifest.js",
+        "server/edge/chunks/ce889_server_app_forest_tree_[public_id]_og-image_route_actions_1baf798c.js",
+        "server/edge/chunks/[root-of-the-server]__cfeafddd._.js",
+        "server/edge/chunks/[root-of-the-server]__042d378c._.js",
+        "server/edge/chunks/node_modules_next_dist_compiled_@vercel_og_16be1ace._.js",
+        "server/edge/chunks/turbopack-node_modules_next_dist_esm_build_templates_edge-wrapper_f06ec650.js"
+      ],
+      "name": "app/forest/tree/[public_id]/og-image/route",
+      "page": "/forest/tree/[public_id]/og-image/route",
+      "matchers": [
+        {
+          "regexp": "^/forest/tree/(?P<nxtPpublicid>[^/]+?)/og-image(?:/)?$",
+          "originalSource": "/forest/tree/[public_id]/og-image"
+        }
+      ],
+      "wasm": [
+        {
+          "name": "wasm_fdb56e4cc5936d29",
+          "filePath": "server/edge/chunks/node_modules_next_dist_compiled_@vercel_og_resvg_23ace1ce.wasm"
+        },
+        {
+          "name": "wasm_1ccdc983b1fd9f87",
+          "filePath": "server/edge/chunks/node_modules_next_dist_compiled_@vercel_og_yoga_23ace1ce.wasm"
+        }
+      ],
+      "assets": [
+        {
+          "name": "server/edge/assets/noto-sans-v27-latin-regular.bdfa676c.ttf",
+          "filePath": "server/edge/assets/noto-sans-v27-latin-regular.bdfa676c.ttf"
+        }
+      ],
+      "env": {
+        "__NEXT_BUILD_ID": "eve2oRoThgBDdvKg4siQV",
+        "NEXT_SERVER_ACTIONS_ENCRYPTION_KEY": "4xQHBGOJG5a4woUhYAgRzjd+aEtJIvSa//7PEmEYP2w=",
+        "__NEXT_PREVIEW_MODE_ID": "34b0d2555893138338d6ee5bf2883ccb",
+        "__NEXT_PREVIEW_MODE_ENCRYPTION_KEY": "4245484ae9ac114a31d1be99820910a5bafb963f7b0941b853047911459cdf76",
+        "__NEXT_PREVIEW_MODE_SIGNING_KEY": "d35a649dc7201ac7e95afa0dc369054d973fb861faaa5b5efe467f8360f382a1"
+      }
+    }
+  }
 }
