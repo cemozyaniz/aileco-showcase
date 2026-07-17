@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Cormorant_Garamond, Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/providers/LanguageProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 import LanguageToggle from "@/components/LanguageToggle";
 
 const cormorant = Cormorant_Garamond({
@@ -49,8 +50,10 @@ export default function RootLayout({
         className={`${cormorant.variable} ${montserrat.variable} antialiased`}
       >
         <LanguageProvider>
-          <LanguageToggle />
-          {children}
+          <AuthProvider>
+            <LanguageToggle />
+            {children}
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>
