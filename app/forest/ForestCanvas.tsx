@@ -5,6 +5,7 @@ import { useAuth } from "@/providers/AuthProvider";
 import LoginModal from "@/app/components/LoginModal";
 import ReservationPanel from "./ReservationPanel";
 import ClaimForm from "./ClaimForm";
+import TreeModal from "./TreeModal";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.aileco.com";
 
@@ -77,6 +78,7 @@ export default function ForestCanvas() {
   const [phase, setPhase] = useState<Phase>("browsing");
   const [showLogin, setShowLogin] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
+  const [selectedTreeId, setSelectedTreeId] = useState<string | null>(null);
 
   // --- Viewport Fetching ---
   const fetchViewport = useCallback(async (vp: Viewport) => {
@@ -364,8 +366,8 @@ export default function ForestCanvas() {
     const key = `${world.x},${world.y}`;
     const tree = claimedRef.current.get(key);
     if (tree) {
-      // Navigate to tree detail page
-      window.open(`/forest/tree/${tree.publicId}`, "_blank");
+      // Show tree detail modal inline
+      setSelectedTreeId(tree.publicId);
       return;
     }
 
@@ -590,6 +592,11 @@ export default function ForestCanvas() {
         onClose={() => setShowLogin(false)}
         message="Sign in to reserve plots and plant trees."
       />
+
+      {/* Tree Modal */}
+      {selectedTreeId && (
+        <TreeModal publicId={selectedTreeId} onClose={() => setSelectedTreeId(null)} />
+      )}
 
       {/* Toast */}
       {toast && (
