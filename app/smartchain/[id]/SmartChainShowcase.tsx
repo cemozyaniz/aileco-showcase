@@ -35,7 +35,21 @@ export interface SmartChainData {
   collaboration?: Collaboration | null;
 }
 
-export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
+interface TreeInfo {
+  publicId: string;
+  treeName: string | null;
+  growthStage: string;
+  activationAt: string | null;
+  ownerDisplayName: string | null;
+  xCoord: number;
+  yCoord: number;
+}
+
+const STAGE_TO_SPRITE: Record<string, number> = {
+  seed: 8, sprout: 0, sapling: 3, young: 5, mature: 5, ancient: 7,
+};
+
+export default function SmartChainShowcase({ data, tree }: { data: SmartChainData; tree: TreeInfo | null }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
   const [showTilt, setShowTilt] = useState(true);
@@ -239,6 +253,39 @@ export default function SmartChainShowcase({ data }: { data: SmartChainData }) {
             </div>
           </Card3D>
         </div>
+
+        {/* Digital Forest Tree Card */}
+        {tree && (
+          <div className="mt-8 pt-8 border-t border-white/10">
+            <p className="text-white/20 text-[9px] uppercase tracking-[0.3em] text-center mb-4 font-body">
+              Digital Forest
+            </p>
+            <a
+              href={`/forest/tree/${tree.publicId}`}
+              className="block bg-[#111111] border border-[#D4A853]/20 hover:border-[#D4A853]/40 transition-colors p-4 max-w-xs mx-auto"
+            >
+              <div className="flex items-center gap-4">
+                <img
+                  src={`/images/forest/trees/trees-set1-64_${STAGE_TO_SPRITE[tree.growthStage] || 5}.png`}
+                  alt={tree.growthStage}
+                  className="w-12 h-12"
+                  style={{ imageRendering: "pixelated" }}
+                />
+                <div className="min-w-0">
+                  <p className="text-[#FFFBF0] text-sm font-heading truncate">
+                    {tree.treeName || "Unnamed Tree"}
+                  </p>
+                  <p className="text-white/30 text-[10px] font-body mt-0.5 capitalize">
+                    {tree.growthStage}
+                  </p>
+                  <p className="text-[#D4A853]/50 text-[9px] font-body mt-1">
+                    View in Forest →
+                  </p>
+                </div>
+              </div>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   );

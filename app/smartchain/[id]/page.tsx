@@ -50,11 +50,19 @@ async function getSmartChainData(id: string): Promise<SmartChainData | null> {
     const res = await fetch(`${API_URL}/smartchains/public/${id}`, {
       next: { revalidate: 60 },
     });
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
 
-    if (!res.ok) {
-      return null;
-    }
-
+async function getTreeData(smartchainId: number) {
+  try {
+    const res = await fetch(`${API_URL}/forest/trees/by-smartchain/${smartchainId}`, {
+      next: { revalidate: 60 },
+    });
+    if (!res.ok) return null;
     return await res.json();
   } catch {
     return null;
@@ -73,5 +81,8 @@ export default async function SmartchainPage({
     notFound();
   }
 
-  return <SmartChainShowcase data={data} />;
+  // If this SmartChain has a planted tree, fetch it
+  const tree = data.id ? await getTreeData(data.id) : null;
+
+  return <SmartChainShowcase data={data} tree={tree} />;
 }
