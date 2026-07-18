@@ -92,6 +92,8 @@ export default function ClaimForm({ reservation, token, onClaimed, onClose }: Pr
           reservationPublicId: reservation.publicId,
           smartchainId: selectedSmartchain || 0,
           claimIdempotencyKey,
+          treeName: treeName || null,
+          message: message || null,
         }),
       });
 
