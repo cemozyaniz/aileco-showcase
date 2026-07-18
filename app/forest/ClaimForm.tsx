@@ -23,6 +23,7 @@ interface SmartchainOption {
   id: number;
   uniqueCode: string;
   productType: string;
+  attachedName: string | null;
 }
 
 export default function ClaimForm({ reservation, token, onClaimed, onClose }: Props) {
@@ -61,7 +62,7 @@ export default function ClaimForm({ reservation, token, onClaimed, onClose }: Pr
   useEffect(() => {
     async function fetchSmartchains() {
       try {
-        const resp = await fetch(`${API_URL}/smartchains`, {
+        const resp = await fetch(`${API_URL}/smartchains/forest-eligible`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!resp.ok) return;
@@ -226,7 +227,7 @@ export default function ClaimForm({ reservation, token, onClaimed, onClose }: Pr
                   <option value="">Select a Smartchain…</option>
                   {smartchains.map((sc) => (
                     <option key={sc.id} value={sc.id}>
-                      {sc.uniqueCode} ({sc.productType})
+                      {sc.attachedName || sc.uniqueCode}
                     </option>
                   ))}
                 </select>
