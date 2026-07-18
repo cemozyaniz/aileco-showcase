@@ -38,6 +38,14 @@ interface Reservation {
   yCoord: number;
 }
 
+function hashToIndex(publicId: string): number {
+  let h = 0;
+  for (let i = 0; i < publicId.length; i++) {
+    h = (h * 31 + publicId.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h) % 9;
+}
+
 type Phase = "browsing" | "reserving" | "claiming";
 
 export default function ForestCanvas() {
@@ -49,6 +57,18 @@ export default function ForestCanvas() {
   const fetchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { isAuthenticated, token, user } = useAuth();
+
+  // Sprite preloader
+  const spritesRef = useRef<HTMLImageElement[] | null>(null);
+  useEffect(() => {
+    const imgs: HTMLImageElement[] = [];
+    for (let i = 0; i < 9; i++) {
+      const img = new Image();
+      img.src = `/images/forest/trees/trees-set1-64_${i}.png`;
+      imgs.push(img);
+    }
+    spritesRef.current = imgs;
+  }, []);
 
   const [claimedPlots, setClaimedPlots] = useState<Set<string>>(new Set());
   const [selectedPlot, setSelectedPlot] = useState<{ x: number; y: number } | null>(null);
@@ -207,7 +227,23 @@ export default function ForestCanvas() {
         const isHovered = hoveredPlot?.x === wx && hoveredPlot?.y === wy;
 
         if (isClaimed) {
-          // Gold circle for claimed
+          if (scale >= 16 && spritesRef.current) {
+            // Pixel art sprite at high zoom
+            const tree = claimed.get(key)!;
+            const idx = hashToIndex(tree.publicId);
+            const sprite = spritesRef.current[idx];
+            if (sprite && sprite.complete) {
+              const size = scale * 0.7;
+              ctx.drawImage(sprite, sx - size / 2, sy - size * 0.8, size, size);
+              if (isHovered) {
+                ctx.strokeStyle = "rgba(255,255,255,0.3)";
+                ctx.lineWidth = 1;
+                ctx.strokeRect(sx - size / 2, sy - size * 0.8, size, size);
+              }
+              continue;
+            }
+          }
+          // Gold circle fallback
           ctx.fillStyle = isSelected || isHovered ? "#FFFBF0" : PLOT_CLAIMED_COLOR;
           ctx.beginPath();
           ctx.arc(sx, sy, dotRadius + (isHovered ? 1 : 0), 0, Math.PI * 2);
