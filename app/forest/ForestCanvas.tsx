@@ -44,7 +44,7 @@ export default function ForestCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const animFrameRef = useRef<number>(0);
-  const claimedRef = useRef<Map<string, true>>(new Map());
+  const claimedRef = useRef<Map<string, { publicId: string; ownerName: string | null }>>(new Map());
   const viewportRef = useRef<Viewport>({ x: 0, y: 0, zoom: 8, width: 0, height: 0 });
   const fetchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -89,7 +89,10 @@ export default function ForestCanvas() {
         if (!resp.ok) continue;
         const data = await resp.json();
         for (const plot of data.plots) {
-          newClaimed.set(`${plot.xCoord},${plot.yCoord}`, true);
+          newClaimed.set(`${plot.xCoord},${plot.yCoord}`, {
+            publicId: plot.publicId,
+            ownerName: plot.ownerDisplayName || null,
+          });
         }
       } catch {
         // Network error — keep stale data
@@ -319,9 +322,10 @@ export default function ForestCanvas() {
     const world = screenToWorld(e.clientX - rect.left, e.clientY - rect.top);
 
     const key = `${world.x},${world.y}`;
-    if (claimedRef.current.has(key)) {
-      // Show toast for claimed plot
-      setToast({ message: `Plot (${world.x}, ${world.y}) is already claimed`, type: "error" });
+    const tree = claimedRef.current.get(key);
+    if (tree) {
+      // Navigate to tree detail page
+      window.open(`/forest/tree/${tree.publicId}`, "_blank");
       return;
     }
 
@@ -492,14 +496,25 @@ export default function ForestCanvas() {
       </div>
 
       {/* Bottom-center: Coordinate readout */}
-      {hoveredPlot && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none">
-          <span className="text-white/20 text-[10px] tracking-[0.2em] font-body tabular-nums">
-            X: {hoveredPlot.x.toString().padStart(4, "0")} &nbsp; Y:{" "}
-            {hoveredPlot.y.toString().padStart(4, "0")}
-          </span>
-        </div>
-      )}
+      {hoveredPlot && (() => {
+        const key = `${hoveredPlot.x},${hoveredPlot.y}`;
+        const tree = claimedRef.current.get(key);
+        return (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none text-center">
+            <span className="text-white/20 text-[10px] tracking-[0.2em] font-body tabular-nums">
+              X: {hoveredPlot.x.toString().padStart(4, "0")} &nbsp; Y:{" "}
+              {hoveredPlot.y.toString().padStart(4, "0")}
+            </span>
+            {tree && (
+              <div className="mt-1">
+                <span className="text-[#D4A853]/60 text-[9px] tracking-wider font-body">
+                  {tree.ownerName || "Unknown"}
+                </span>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Reservation Panel */}
       {phase === "reserving" && selectedPlot && (
