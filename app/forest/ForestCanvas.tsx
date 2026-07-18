@@ -268,13 +268,17 @@ export default function ForestCanvas() {
   // --- Pan/Zoom Handlers ---
   const interactionState = useRef<{
     dragging: boolean;
+    startX: number;
+    startY: number;
     lastX: number;
     lastY: number;
     pinchDist: number;
-  }>({ dragging: false, lastX: 0, lastY: 0, pinchDist: 0 });
+  }>({ dragging: false, startX: 0, startY: 0, lastX: 0, lastY: 0, pinchDist: 0 });
 
   function handleMouseDown(e: React.MouseEvent) {
     interactionState.current.dragging = true;
+    interactionState.current.startX = e.clientX;
+    interactionState.current.startY = e.clientY;
     interactionState.current.lastX = e.clientX;
     interactionState.current.lastY = e.clientY;
   }
@@ -311,10 +315,10 @@ export default function ForestCanvas() {
 
   function handleClick(e: React.MouseEvent) {
     const is = interactionState.current;
-    // Only treat as click if we didn't drag
-    const dx = Math.abs(e.clientX - is.lastX);
-    const dy = Math.abs(e.clientY - is.lastY);
-    if (dx > 3 || dy > 3) return;
+    // Only treat as click if we didn't drag (check against start position)
+    const dx = Math.abs(e.clientX - is.startX);
+    const dy = Math.abs(e.clientY - is.startY);
+    if (dx > 5 || dy > 5) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
