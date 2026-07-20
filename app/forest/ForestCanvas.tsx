@@ -57,7 +57,7 @@ export default function ForestCanvas() {
   const viewportRef = useRef<Viewport>({ x: 0, y: 0, zoom: 8, width: 0, height: 0 });
   const fetchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { isAuthenticated, token, user } = useAuth();
+  const { isAuthenticated, token, user, logout } = useAuth();
 
   // Sprite preloader
   const spritesRef = useRef<HTMLImageElement[] | null>(null);
@@ -79,6 +79,9 @@ export default function ForestCanvas() {
   const [showLogin, setShowLogin] = useState(false);
   const [toast, setToast] = useState<{ message: string; type: "error" | "success" } | null>(null);
   const [selectedTreeId, setSelectedTreeId] = useState<string | null>(null);
+  const [showMyTrees, setShowMyTrees] = useState(false);
+  const myTreesRef = useRef<Map<string, { publicId: string; growthStage: string }>>(new Map());
+  const pulseRef = useRef<number>(0);
 
   // --- Viewport Fetching ---
   const fetchViewport = useCallback(async (vp: Viewport) => {
@@ -124,6 +127,28 @@ export default function ForestCanvas() {
     claimedRef.current = newClaimed;
     setClaimedPlots(new Set(newClaimed.keys()));
   }, []);
+
+  // --- My Trees Fetch ---
+  const fetchMyTrees = useCallback(async () => {
+    if (!token) return;
+    try {
+      const resp = await fetch(`${API_URL}/forest/my-trees`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const map = new Map<string, { publicId: string; growthStage: string }>();
+      for (const t of data.items || []) {
+        map.set(`${t.xCoord},${t.yCoord}`, { publicId: t.publicId, growthStage: t.growthStage });
+      }
+      myTreesRef.current = map;
+    } catch { /* silent */ }
+  }, [token]);
+
+  // Fetch my trees when toggled on
+  useEffect(() => {
+    if (showMyTrees) fetchMyTrees();
+  }, [showMyTrees, fetchMyTrees]);
 
   const scheduleFetch = useCallback(
     (vp: Viewport) => {
@@ -242,6 +267,15 @@ export default function ForestCanvas() {
                 ctx.lineWidth = 1;
                 ctx.strokeRect(sx - size / 2, sy - size * 0.8, size, size);
               }
+              // My-trees glow on sprite
+              if (showMyTrees && myTreesRef.current.has(key)) {
+                const pulse = Math.sin(pulseRef.current * Math.PI / 30) * 0.35 + 0.65;
+                ctx.strokeStyle = `rgba(212,168,83,${0.5 + pulse * 0.4})`;
+                ctx.lineWidth = 2;
+                ctx.strokeRect(sx - size / 2 - 2, sy - size * 0.8 - 2, size + 4, size + 4);
+                ctx.fillStyle = `rgba(255,251,240,${0.25 + pulse * 0.2})`;
+                ctx.fillRect(sx - size / 2 - 2, sy - size * 0.8 - 2, size + 4, size + 4);
+              }
               continue;
             }
           }
@@ -257,6 +291,23 @@ export default function ForestCanvas() {
           ctx.arc(sx, sy, isHovered ? dotRadius + 1 : dotRadius * 0.7, 0, Math.PI * 2);
           ctx.fill();
         }
+
+        // --- My Trees highlight glow (overlays on top of all plots) ---
+        if (showMyTrees && myTreesRef.current.has(key)) {
+          const pulse = Math.sin(pulseRef.current * Math.PI / 30) * 0.35 + 0.65; // 0.3 → 1.0, ~2s cycle
+          const glowSize = dotRadius + 3 + pulse * 4;
+          // Outer glow ring
+          ctx.strokeStyle = `rgba(212,168,83,${0.5 + pulse * 0.4})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(sx, sy, glowSize, 0, Math.PI * 2);
+          ctx.stroke();
+          // Inner bright spot
+          ctx.fillStyle = `rgba(255,251,240,${0.6 + pulse * 0.3})`;
+          ctx.beginPath();
+          ctx.arc(sx, sy, dotRadius * 0.6, 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
     }
   }, [selectedPlot, hoveredPlot]);
@@ -264,6 +315,7 @@ export default function ForestCanvas() {
   // --- Animation Loop ---
   useEffect(() => {
     function loop() {
+      pulseRef.current = (pulseRef.current + 1) % 120;
       draw();
       animFrameRef.current = requestAnimationFrame(loop);
     }
@@ -518,15 +570,44 @@ export default function ForestCanvas() {
         </p>
       </div>
 
-      {/* Top-right: Zoom + Auth */}
+      {/* Top-right: Zoom + My Trees + Auth */}
       <div className="absolute top-6 right-6 flex items-center gap-3">
         <span className="text-white/30 text-[10px] font-body tabular-nums">
           {Math.round(viewportRef.current.zoom * 100)}%
         </span>
+
+        {/* My Trees toggle */}
+        {isAuthenticated && (
+          <button
+            onClick={() => setShowMyTrees((v) => !v)}
+            className={`text-[10px] uppercase tracking-widest font-body transition-colors ${
+              showMyTrees
+                ? "text-[#D4A853]"
+                : "text-white/25 hover:text-[#D4A853]/60"
+            }`}
+            title={showMyTrees ? "Hide my trees" : "Show my trees"}
+          >
+            {showMyTrees ? "My Trees ✓" : "My Trees"}
+          </button>
+        )}
+
         {isAuthenticated ? (
-          <span className="text-[#D4A853]/70 text-[10px] uppercase tracking-widest font-body">
-            {user?.name?.split(" ")[0] || "User"}
-          </span>
+          <div className="flex items-center gap-3">
+            <span className="text-[#D4A853]/70 text-[10px] uppercase tracking-widest font-body">
+              {user?.name?.split(" ")[0] || "User"}
+            </span>
+            <button
+              onClick={() => {
+                logout();
+                setShowMyTrees(false);
+                myTreesRef.current.clear();
+              }}
+              className="text-white/20 hover:text-red-400/60 text-[9px] uppercase tracking-widest transition-colors font-body"
+              title="Sign out"
+            >
+              Sign Out
+            </button>
+          </div>
         ) : (
           <button
             onClick={() => setShowLogin(true)}

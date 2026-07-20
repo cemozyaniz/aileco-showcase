@@ -33,15 +33,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Check if a JWT token is expired
+  function isTokenExpired(tok: string): boolean {
+    try {
+      const payload = JSON.parse(atob(tok.split(".")[1]));
+      return payload.exp * 1000 < Date.now();
+    } catch {
+      return true; // malformed → treat as expired
+    }
+  }
+
   // Restore token from localStorage on mount
   useEffect(() => {
     try {
       const raw = localStorage.getItem("aileco_forest_token");
       if (raw) {
         const parsed = JSON.parse(raw);
-        if (parsed?.accessToken && parsed?.user) {
+        if (parsed?.accessToken && parsed?.user && !isTokenExpired(parsed.accessToken)) {
           setToken(parsed.accessToken);
           setUser(parsed.user);
+        } else {
+          localStorage.removeItem("aileco_forest_token");
         }
       }
     } catch {
@@ -49,6 +61,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     setIsLoading(false);
   }, []);
+
+  // Auto-logout when token expires (check every 60s)
+  useEffect(() => {
+    if (!token) return;
+    const interval = setInterval(() => {
+      if (isTokenExpired(token)) {
+        localStorage.removeItem("aileco_forest_token");
+        localStorage.removeItem("forest_pending_reservation");
+        setToken(null);
+        setUser(null);
+      }
+    }, 60_000);
+    return () => clearInterval(interval);
+  }, [token]);
 
   const login = useCallback(async (email: string, password: string) => {
     const resp = await fetch(`${API_URL}/auth/login`, {
