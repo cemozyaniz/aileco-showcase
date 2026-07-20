@@ -571,7 +571,7 @@ export default function ForestCanvas() {
       </div>
 
       {/* Top-right: Zoom + My Trees + Auth */}
-      <div className="absolute top-14 sm:top-6 right-6 flex items-center gap-3">
+      <div className="absolute top-16 right-6 flex items-center gap-3">
         <span className="text-white/30 text-[10px] font-body tabular-nums">
           {Math.round(viewportRef.current.zoom * 100)}%
         </span>
