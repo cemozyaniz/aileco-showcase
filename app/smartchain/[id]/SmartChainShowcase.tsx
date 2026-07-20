@@ -215,8 +215,8 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
         </div>
       )}
 
-      {/* Main content area — single card */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4">
+      {/* Main content area — card + optional tree inline */}
+      <div className="relative z-10 min-h-screen flex flex-col items-center justify-center gap-0 px-4 py-24 md:py-0">
         <div
           ref={cardWrapperRef}
           className="gsap-hidden will-animate-transform relative"
@@ -254,31 +254,33 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
           </Card3D>
         </div>
 
-        {/* Digital Forest Tree Card */}
+        {/* Digital Forest Tree Card — inline with the card, visible without scrolling */}
         {tree && (
-          <div className="mt-8 pt-8 border-t border-white/10">
-            <p className="text-white/20 text-[9px] uppercase tracking-[0.3em] text-center mb-4 font-body">
+          <div className="mt-6 pt-6 border-t border-white/[0.08] w-full max-w-xs">
+            <p className="text-white/15 text-[8px] uppercase tracking-[0.3em] text-center mb-3 font-body">
               Digital Forest
             </p>
             <a
               href={`/forest/tree/${tree.publicId}`}
-              className="block bg-[#111111] border border-[#D4A853]/20 hover:border-[#D4A853]/40 transition-colors p-4 max-w-xs mx-auto"
+              className="block bg-[#0D0D0D] border border-[#D4A853]/20 hover:border-[#D4A853]/40 active:border-[#D4A853]/60 transition-colors p-4 touch-manipulation"
             >
               <div className="flex items-center gap-4">
-                <img
-                  src={`/images/forest/trees/trees-set1-64_${STAGE_TO_SPRITE[tree.growthStage] || 5}.png`}
-                  alt={tree.growthStage}
-                  className="w-12 h-12"
-                  style={{ imageRendering: "pixelated" }}
-                />
-                <div className="min-w-0">
-                  <p className="text-[#FFFBF0] text-sm font-heading truncate">
+                <div className="shrink-0 w-14 h-14 bg-black/50 flex items-center justify-center">
+                  <img
+                    src={`/images/forest/trees/trees-set1-64_${STAGE_TO_SPRITE[tree.growthStage] || 5}.png`}
+                    alt={tree.growthStage}
+                    className="w-14 h-14"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[#FFFBF0] text-sm font-heading truncate leading-tight">
                     {tree.treeName || "Unnamed Tree"}
                   </p>
                   <p className="text-white/30 text-[10px] font-body mt-0.5 capitalize">
                     {tree.growthStage}
                   </p>
-                  <p className="text-[#D4A853]/50 text-[9px] font-body mt-1">
+                  <p className="text-[#D4A853]/60 text-[10px] font-body mt-1.5">
                     View in Forest →
                   </p>
                 </div>

@@ -69,31 +69,34 @@ export default function TreeModal({ publicId, onClose }: Props) {
           </div>
         ) : (
           <>
-            {/* Close */}
-            <button onClick={onClose} className="absolute top-4 right-4 text-white/30 hover:text-white text-xs uppercase tracking-widest">✕</button>
+            {/* Close + drag handle */}
+            <div className="flex items-center justify-between mb-3 sm:hidden">
+              <div className="w-8 h-0.5 bg-white/15 rounded-full mx-auto" />
+              <button onClick={onClose} className="text-white/30 hover:text-white text-xs uppercase tracking-widest absolute right-6 top-4">✕</button>
+            </div>
 
             {/* Sprite */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center mb-3">
               <img
                 src={`/images/forest/trees/trees-set1-256_${spriteIdx}.png`}
                 alt={tree.growthStage}
-                className="w-32 h-32 pixelated"
+                className="w-28 h-28 sm:w-32 sm:h-32"
                 style={{ imageRendering: "pixelated" }}
               />
             </div>
 
             {/* Info */}
-            <div className="text-center mb-6">
-              <h2 className="font-heading text-xl text-[#FFFBF0] tracking-wide">
+            <div className="text-center mb-4">
+              <h2 className="font-heading text-lg sm:text-xl text-[#FFFBF0] tracking-wide">
                 {tree.treeName || "Unnamed Tree"}
               </h2>
-              <p className="text-white/30 text-xs mt-1 font-body">
+              <p className="text-white/30 text-[11px] mt-0.5 font-body">
                 Planted by {tree.ownerDisplayName || "Anonymous"}
               </p>
             </div>
 
             {/* Details */}
-            <div className="grid grid-cols-2 gap-px bg-white/5 mb-6">
+            <div className="grid grid-cols-2 gap-px bg-white/5 mb-4">
               {[
                 { l: "Stage", v: STAGE_LABELS[tree.growthStage] || tree.growthStage },
                 { l: "Planted", v: planted },
@@ -108,7 +111,7 @@ export default function TreeModal({ publicId, onClose }: Props) {
             </div>
 
             {/* Growth bar */}
-            <div className="mb-6">
+            <div className="mb-4">
               <div className="h-0.5 bg-white/5">
                 <div
                   className="h-full bg-[#D4A853] transition-all duration-500"
@@ -124,17 +127,17 @@ export default function TreeModal({ publicId, onClose }: Props) {
               </div>
             </div>
 
-            {/* Actions */}
-            <div className="flex gap-3">
+            {/* Actions — stack on mobile */}
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
               <Link
                 href={`/forest/tree/${tree.publicId}`}
-                className="flex-1 text-center bg-[#D4A853] text-black font-semibold py-2.5 text-xs uppercase tracking-[0.15em] hover:bg-[#E8B33A] transition-colors font-body"
+                className="flex-1 text-center bg-[#D4A853] text-black font-semibold py-3 text-xs uppercase tracking-[0.15em] hover:bg-[#E8B33A] active:bg-[#C49A3A] transition-colors font-body touch-manipulation"
               >
                 View Full Page
               </Link>
               <button
                 onClick={onClose}
-                className="flex-1 bg-white/5 border border-white/10 text-white/60 py-2.5 text-xs uppercase tracking-[0.15em] hover:bg-white/10 transition-colors font-body"
+                className="flex-1 bg-white/5 border border-white/10 text-white/60 py-3 text-xs uppercase tracking-[0.15em] hover:bg-white/10 active:bg-white/[0.08] transition-colors font-body touch-manipulation"
               >
                 Close
               </button>
