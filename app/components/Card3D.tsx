@@ -4,14 +4,6 @@ import { useState, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { useTranslation } from "@/providers/LanguageProvider";
 import StatusBadge from "./StatusBadge";
-import OwnerInfo from "./OwnerInfo";
-import PrivacyMessage from "./PrivacyMessage";
-
-interface VCardField {
-  label: string;
-  value: string;
-  fieldType: string;
-}
 
 interface Card3DProps {
   uniqueCode: string;
@@ -23,10 +15,6 @@ interface Card3DProps {
   isRevealed: boolean;
   cardScale: number;
   showTilt: boolean;
-  ownerName?: string;
-  ownerPhoneNumber?: string | null;
-  ownerEmail?: string | null;
-  ownerVCardFields?: VCardField[];
   children: React.ReactNode;
 }
 
@@ -57,10 +45,6 @@ export default function Card3D({
   isRevealed,
   cardScale,
   showTilt,
-  ownerName,
-  ownerPhoneNumber,
-  ownerEmail,
-  ownerVCardFields,
   children,
 }: Card3DProps) {
   const { t } = useTranslation();
@@ -136,7 +120,7 @@ export default function Card3D({
         {children}
       </div>
 
-      {/* ═══════ BACK FACE — Product + Owner Info ═══════ */}
+      {/* ═══════ BACK FACE — Product Info Only ═══════ */}
       <div
         style={{
           backfaceVisibility: "hidden",
@@ -146,56 +130,40 @@ export default function Card3D({
         }}
         className="rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-900 to-zinc-800"
       >
-        <div className="relative w-full h-full flex flex-col p-4 sm:p-5">
+        <div className="relative w-full h-full flex flex-col items-center justify-center p-4 sm:p-5">
           {/* Status Badge — top right */}
           <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-20">
             <StatusBadge status={badgeStatus} isVisible={true} label={badgeLabel} />
           </div>
 
-          {/* Product info section — top */}
-          <div className="shrink-0 pt-1">
-            <h2 className="text-base sm:text-lg font-medium text-white pr-20 leading-tight">
-              {attachedName || t("smartchain.defaultName")}
-            </h2>
-            <div className="flex items-center gap-2 mt-1">
-              <code className="text-[10px] font-mono text-zinc-500 tracking-wider">{copiableCode}</code>
-              <button
-                className="text-zinc-600 hover:text-zinc-400 transition-colors"
-                title="Copy code"
-                onClick={() => navigator.clipboard.writeText(copiableCode).catch(() => {})}
-              >
-                <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                </svg>
-              </button>
-            </div>
-            <div className="flex items-center gap-2 flex-wrap mt-2">
-              {typeLabel && (
-                <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
-                  {typeLabel}
-                </span>
-              )}
-              {formattedDate && (
-                <span className="text-[10px] text-zinc-600">{formattedDate}</span>
-              )}
-            </div>
+          {/* Product name */}
+          <h2 className="text-base sm:text-lg font-medium text-white text-center px-4 leading-tight">
+            {attachedName || t("smartchain.defaultName")}
+          </h2>
+
+          {/* Code + copy button */}
+          <div className="flex items-center gap-2 mt-2">
+            <code className="text-[10px] font-mono text-zinc-500 tracking-wider">{copiableCode}</code>
+            <button
+              className="text-zinc-600 hover:text-zinc-400 transition-colors"
+              title="Copy code"
+              onClick={() => navigator.clipboard.writeText(copiableCode).catch(() => {})}
+            >
+              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </button>
           </div>
 
-          {/* Divider */}
-          <div className="w-full h-px bg-white/[0.06] my-3 shrink-0" />
-
-          {/* Bottom section — Owner Info or Privacy Message */}
-          <div className="flex-1 min-h-0 overflow-y-auto">
-            {ownerName ? (
-              <OwnerInfo
-                name={ownerName}
-                phoneNumber={ownerPhoneNumber ?? null}
-                email={ownerEmail ?? null}
-                vCardFields={ownerVCardFields}
-                isVisible={true}
-              />
-            ) : (
-              <PrivacyMessage isVisible={true} />
+          {/* Type label + date */}
+          <div className="flex items-center gap-2 mt-2">
+            {typeLabel && (
+              <span className="inline-block px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/[0.06] text-zinc-400 border border-white/[0.08]">
+                {typeLabel}
+              </span>
+            )}
+            {formattedDate && (
+              <span className="text-[10px] text-zinc-600">{formattedDate}</span>
             )}
           </div>
         </div>
