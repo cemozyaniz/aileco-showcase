@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Card3D from "@/app/components/Card3D";
+import VCardModal from "@/app/components/VCardModal";
 import CoBrandingBar, { type Collaboration } from "@/app/components/CoBrandingBar";
 import { useTranslation } from "@/providers/LanguageProvider";
 
@@ -50,9 +51,8 @@ const STAGE_TO_SPRITE: Record<string, number> = {
 };
 
 export default function SmartChainShowcase({ data, tree }: { data: SmartChainData; tree: TreeInfo | null }) {
-  const [isFlipped, setIsFlipped] = useState(false);
   const [isRevealed, setIsRevealed] = useState(false);
-  const [showTilt, setShowTilt] = useState(true);
+  const [showVCard, setShowVCard] = useState(false);
   const { t, language } = useTranslation();
 
   // Refs for GSAP targeting
@@ -65,38 +65,29 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
   useGSAP(() => {
     const mm = gsap.matchMedia();
 
-    // Gather particle elements as array for type-safe GSAP targets
     const particleElements = particlesRef.current
       ? Array.from(particlesRef.current.children)
       : [];
 
-    // Reduced motion: show everything instantly, no tweens
+    // Reduced motion: show everything instantly
     mm.add("(prefers-reduced-motion: reduce)", () => {
       gsap.set(
-        [
-          particlesRef.current,
-          cardWrapperRef.current,
-          glowRef.current,
-          homeLinkRef.current,
-        ],
+        [particlesRef.current, cardWrapperRef.current, glowRef.current, homeLinkRef.current],
         { opacity: 1, y: 0, scale: 1 }
       );
-      setIsFlipped(true);
       setIsRevealed(true);
     });
 
-    // Normal motion: full GSAP timeline
+    // Normal motion: fade in + reveal
     mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline();
 
-      // 0ms — Particles fade in
       tl.fromTo(
         particleElements,
         { opacity: 0 },
         { opacity: 1, duration: 0.8, ease: "power2.out" }
       );
 
-      // 0ms — Home link slides in from left
       tl.fromTo(
         homeLinkRef.current,
         { opacity: 0, x: -20 },
@@ -104,7 +95,6 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
         "<"
       );
 
-      // 0ms — Card floats up + scales in
       tl.fromTo(
         cardWrapperRef.current,
         { opacity: 0, y: 40, scale: 0.92 },
@@ -112,46 +102,30 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
         "<"
       );
 
-      // 200ms — Gold glow pulse behind card
-      tl.to(
-        glowRef.current,
-        {
-          opacity: 1,
-          duration: 0.6,
-          ease: "sine.inOut",
-          yoyo: true,
-          repeat: 1,
-        },
-        "+=0.2"
-      );
+      tl.to(glowRef.current, {
+        opacity: 1,
+        duration: 0.6,
+        ease: "sine.inOut",
+        yoyo: true,
+        repeat: 1,
+      }, "+=0.2");
 
-      // 700ms — Card flips (Card3D handles the actual rotateY via framer-motion)
-      tl.call(() => {
-        setIsFlipped(true);
-        setShowTilt(false);
-      }, [], "+=0.5");
-
-      // 2400ms — Card scales to 0.9 (revealed state)
+      // Card scales to revealed state after intro
       tl.call(() => {
         setIsRevealed(true);
       }, [], "+=0.8");
     });
 
-    // Cleanup all matchMedia listeners on unmount
     return () => mm.revert();
   }, { scope: containerRef });
 
-  // Geolocation and scan notification
+  // Geolocation and scan notification (silent, no UX gating)
   useEffect(() => {
-    const sendNotificationBridge = (lat: number | null, lng: number | null) => {
+    const sendScan = (lat: number | null, lng: number | null) => {
       fetch(`${API_URL}/smartchains/public/scan`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          unique_code: data.uniqueCode,
-          latitude: lat,
-          longitude: lng,
-        }),
+        body: JSON.stringify({ unique_code: data.uniqueCode, latitude: lat, longitude: lng }),
       }).catch((err) => {
         console.debug("Scan notification failed:", err);
       });
@@ -160,16 +134,15 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
     if (typeof navigator !== "undefined" && navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          const { latitude, longitude } = position.coords;
-          sendNotificationBridge(latitude, longitude);
+          sendScan(position.coords.latitude, position.coords.longitude);
         },
         () => {
-          sendNotificationBridge(null, null);
+          sendScan(null, null);
         },
         { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
       );
     } else {
-      sendNotificationBridge(null, null);
+      sendScan(null, null);
     }
   }, [data.uniqueCode]);
 
@@ -186,11 +159,8 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
         />
       </div>
 
-      {/* GSAP-animated floating particles — atmosphere */}
-      <div
-        ref={particlesRef}
-        className="fixed inset-0 pointer-events-none overflow-hidden z-0"
-      >
+      {/* GSAP-animated floating particles */}
+      <div ref={particlesRef} className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute rounded-full bg-white/[0.03] w-[4px] h-[4px] left-[10%] top-[20%]" />
         <div className="absolute rounded-full bg-white/[0.03] w-[3px] h-[3px] left-[85%] top-[35%]" />
         <div className="absolute rounded-full bg-white/[0.03] w-[2px] h-[2px] left-[25%] top-[75%]" />
@@ -208,19 +178,16 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
         {language === "tr" ? "← Anasayfa" : "← Home"}
       </a>
 
-      {/* Co-branding bar — top center, stacks below buttons on mobile */}
+      {/* Co-branding bar — top center */}
       {data.collaboration && (
         <div className="fixed top-14 md:top-6 left-1/2 -translate-x-1/2 z-50">
           <CoBrandingBar collaboration={data.collaboration} />
         </div>
       )}
 
-      {/* Main content area — card + optional tree inline */}
+      {/* Main content area — card + tree */}
       <div className="relative z-10 min-h-screen flex flex-col items-center justify-center gap-0 px-4 py-24 md:py-0">
-        <div
-          ref={cardWrapperRef}
-          className="gsap-hidden will-animate-transform relative"
-        >
+        <div ref={cardWrapperRef} className="gsap-hidden will-animate-transform relative">
           {/* Gold glow behind card */}
           <div
             ref={glowRef}
@@ -233,14 +200,11 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
             attachedToType={data.attachedToType}
             createdAt={data.createdAt}
             mode={data.mode}
-            isFlipped={isFlipped}
             isRevealed={isRevealed}
             cardScale={isRevealed ? 0.9 : 1}
-            showTilt={showTilt}
-            ownerName={data.owner?.name ?? undefined}
-            ownerPhoneNumber={data.owner?.phoneNumber}
-            ownerEmail={data.owner?.email}
-            ownerVCardFields={data.owner?.vCardFields}
+            ownerName={data.owner?.name ?? null}
+            isProfilePublic={data.isProfilePublic}
+            onViewContact={() => setShowVCard(true)}
           >
             <div className="w-full h-full relative">
               <img
@@ -254,7 +218,7 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
           </Card3D>
         </div>
 
-        {/* Digital Forest Tree Card — inline with the card, visible without scrolling */}
+        {/* Digital Forest Tree Card */}
         {tree && (
           <div className="mt-6 pt-6 border-t border-white/[0.08] w-full max-w-xs">
             <p className="text-white/15 text-[8px] uppercase tracking-[0.3em] text-center mb-3 font-body">
@@ -289,6 +253,19 @@ export default function SmartChainShowcase({ data, tree }: { data: SmartChainDat
           </div>
         )}
       </div>
+
+      {/* VCard Modal */}
+      {showVCard && data.owner && (
+        <VCardModal
+          owner={{
+            name: data.owner.name || "",
+            phoneNumber: data.owner.phoneNumber,
+            email: data.owner.email,
+            vCardFields: data.owner.vCardFields,
+          }}
+          onClose={() => setShowVCard(false)}
+        />
+      )}
     </div>
   );
 }

@@ -66,6 +66,7 @@ export const translations = {
     "smartchain.status.stolen": "Stolen",
     "smartchain.owner": "Owner",
     "smartchain.saveContact": "Save Contact",
+    "smartchain.viewContact": "View Contact",
     "smartchain.downloadApp": "Get the AileCo App",
     "smartchain.poweredBy": "Powered by AileCo",
 
@@ -286,6 +287,7 @@ export const translations = {
     "smartchain.status.stolen": "Çalınmış",
     "smartchain.owner": "Sahibi",
     "smartchain.saveContact": "Rehbere Ekle",
+    "smartchain.viewContact": "İletişimi Gör",
     "smartchain.downloadApp": "AileCo Uygulamasını İndir",
     "smartchain.poweredBy": "AileCo tarafından",
 
