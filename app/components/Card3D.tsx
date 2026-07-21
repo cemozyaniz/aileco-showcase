@@ -75,10 +75,11 @@ export default function Card3D({
       await new Promise((r) => setTimeout(r, 400));
       if (cancelled) return;
       await peekControls.start({
-        rotateY: [0, 40, 0],
-        transition: { duration: 1.5, times: [0, 0.33, 1], ease: "easeInOut" },
+        rotateY: [0, 25, 20],
+        transition: { duration: 1.5, times: [0, 0.45, 1], ease: "easeInOut" },
       });
       if (cancelled) return;
+      setDragRotation(20); // start from peek resting angle
       setIsInteractive(true);
     };
     run();
@@ -334,11 +335,11 @@ export default function Card3D({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+4px)] pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+2px)] pointer-events-none"
         >
           <motion.span
-            className="inline-flex items-center gap-1 text-white/20 text-[9px] font-body tracking-widest uppercase"
-            animate={{ opacity: [0.15, 0.45, 0.15] }}
+            className="inline-flex items-center gap-1 text-white/35 text-[10px] font-body tracking-widest uppercase"
+            animate={{ opacity: [0.25, 0.6, 0.25] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
           >
             <motion.span
