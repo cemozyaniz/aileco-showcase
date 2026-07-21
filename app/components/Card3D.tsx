@@ -311,22 +311,6 @@ export default function Card3D({
           }}
         />
 
-        {/* ═══════ SHINE EFFECT ═══════ */}
-        <motion.div
-          initial={{ x: "-100%" }}
-          animate={{ x: "200%" }}
-          transition={{
-            duration: 2.5,
-            delay: 0.5,
-            ease: "easeInOut",
-            repeat: Infinity,
-            repeatDelay: 4,
-          }}
-          className="absolute inset-0 z-10 pointer-events-none rounded-2xl"
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <div className="w-1/3 h-full bg-gradient-to-r from-transparent via-white/[0.07] to-transparent" />
-        </motion.div>
       </motion.div>
 
       {/* Rotation hint — appears after peek, tight to card */}
