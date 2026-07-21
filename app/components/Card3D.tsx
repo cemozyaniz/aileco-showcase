@@ -11,8 +11,6 @@ interface Card3DProps {
   attachedToType?: string | null;
   createdAt?: string | null;
   mode?: string | null;
-  isRevealed: boolean;
-  cardScale: number;
   ownerName?: string | null;
   isProfilePublic?: boolean | null;
   onViewContact?: () => void;
@@ -45,8 +43,6 @@ export default function Card3D({
   attachedToType,
   createdAt,
   mode,
-  isRevealed,
-  cardScale,
   ownerName,
   isProfilePublic,
   onViewContact,
@@ -56,33 +52,31 @@ export default function Card3D({
   const cardRef = useRef<HTMLDivElement>(null);
   const peekControls = useAnimation();
 
-  // Drag-to-rotate
+  // Drag-to-rotate — free rotation, no snap
   const [dragRotation, setDragRotation] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartX = useRef(0);
   const dragStartRot = useRef(0);
 
-  // Mouse vertical tilt (only when NOT dragging + interactive)
+  // Vertical tilt from mouse position (when not dragging + interactive)
   const [tiltX, setTiltX] = useState(0);
 
   // Interactive after peek completes
   const [isInteractive, setIsInteractive] = useState(false);
 
-  // Trigger peek animation after card is revealed
+  // Peek animation on mount
   useEffect(() => {
-    if (!isRevealed) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setIsInteractive(true);
       return;
     }
     let cancelled = false;
     const run = async () => {
-      await new Promise((r) => setTimeout(r, 500));
+      await new Promise((r) => setTimeout(r, 400));
       if (cancelled) return;
-      // Peek: tilt ~40° to hint the back side, then return
       await peekControls.start({
         rotateY: [0, 40, 0],
-        transition: { duration: 1.6, times: [0, 0.35, 1], ease: "easeInOut" },
+        transition: { duration: 1.5, times: [0, 0.33, 1], ease: "easeInOut" },
       });
       if (cancelled) return;
       setIsInteractive(true);
@@ -90,7 +84,7 @@ export default function Card3D({
     run();
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRevealed]);
+  }, []);
 
   // Pointer handlers — active only when interactive
   const handlePointerDown = useCallback(
@@ -108,17 +102,15 @@ export default function Card3D({
     (e: React.PointerEvent) => {
       if (!isDragging || !isInteractive) return;
       const delta = e.clientX - dragStartX.current;
-      setDragRotation(clamp(dragStartRot.current + delta * 0.8, 0, 180));
+      setDragRotation(clamp(dragStartRot.current + delta * 0.9, 0, 180));
     },
     [isDragging, isInteractive],
   );
 
+  // Release — stop where released, no snap
   const handlePointerUp = useCallback(() => {
-    if (!isDragging) return;
     setIsDragging(false);
-    // Snap to nearest face
-    setDragRotation((prev) => (prev < 90 ? 0 : 180));
-  }, [isDragging]);
+  }, []);
 
   // Mouse hover tilt (vertical, when not dragging + interactive)
   const handleMouseMove = useCallback(
@@ -126,7 +118,7 @@ export default function Card3D({
       if (isDragging || !isInteractive || !cardRef.current) return;
       const rect = cardRef.current.getBoundingClientRect();
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      setTiltX(y * -8);
+      setTiltX(y * -6);
     },
     [isDragging, isInteractive],
   );
@@ -157,11 +149,6 @@ export default function Card3D({
       })
     : null;
 
-  // Gold-tinted shadow (replaced blue glow)
-  const cardShadow = isRevealed
-    ? "0 20px 50px -10px rgba(212,168,83,0.1), 0 0 40px rgba(212,168,83,0.05)"
-    : "0 25px 50px -12px rgba(0,0,0,0.5)";
-
   return (
     <div className="relative">
       <motion.div
@@ -177,27 +164,18 @@ export default function Card3D({
             : {
                 rotateX: isDragging ? 0 : tiltX,
                 rotateY: dragRotation,
-                scale: cardScale,
               }
         }
         transition={
           !isInteractive
             ? {}
             : isDragging
-              ? {
-                  rotateY: { duration: 0 },
-                  rotateX: { duration: 0.15 },
-                  scale: { type: "spring", stiffness: 100, damping: 20 },
-                }
-              : {
-                  rotateY: { type: "spring", stiffness: 70, damping: 16 },
-                  rotateX: { duration: 0.3, ease: "easeOut" },
-                  scale: { type: "spring", stiffness: 100, damping: 20 },
-                }
+              ? { rotateY: { duration: 0 }, rotateX: { duration: 0.1 } }
+              : { rotateY: { duration: 0 }, rotateX: { duration: 0.3 } }
         }
         style={{
           transformStyle: "preserve-3d",
-          boxShadow: cardShadow,
+          boxShadow: "0 20px 50px -10px rgba(212,168,83,0.08), 0 0 40px rgba(212,168,83,0.04)",
           touchAction: "pan-y",
         }}
         className="relative cursor-grab active:cursor-grabbing select-none
@@ -350,21 +328,21 @@ export default function Card3D({
         </motion.div>
       </motion.div>
 
-      {/* Rotation hint — fades in after peek completes */}
+      {/* Rotation hint — appears after peek, tight to card */}
       {isInteractive && (
         <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="absolute left-1/2 -translate-x-1/2 top-full pt-3 pointer-events-none"
+          className="absolute left-1/2 -translate-x-1/2 top-[calc(100%+4px)] pointer-events-none"
         >
           <motion.span
-            className="inline-flex items-center gap-1.5 text-white/25 text-[10px] font-body tracking-widest uppercase"
-            animate={{ opacity: [0.2, 0.55, 0.2] }}
+            className="inline-flex items-center gap-1 text-white/20 text-[9px] font-body tracking-widest uppercase"
+            animate={{ opacity: [0.15, 0.45, 0.15] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
           >
             <motion.span
-              className="inline-block text-sm"
+              className="inline-block text-xs"
               animate={{ rotate: [0, 360] }}
               transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
             >
