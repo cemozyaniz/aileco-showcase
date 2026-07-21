@@ -103,7 +103,7 @@ export default function Card3D({
     (e: React.PointerEvent) => {
       if (!isDragging || !isInteractive) return;
       const delta = e.clientX - dragStartX.current;
-      setDragRotation(clamp(dragStartRot.current + delta * 0.9, 0, 180));
+      setDragRotation(dragStartRot.current + delta * 0.9);
     },
     [isDragging, isInteractive],
   );
