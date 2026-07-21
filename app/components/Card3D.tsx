@@ -37,6 +37,10 @@ function clamp(v: number, min: number, max: number) {
   return Math.max(min, Math.min(max, v));
 }
 
+function clamp(v: number, min: number, max: number) {
+  return Math.max(min, Math.min(max, v));
+}
+
 export default function Card3D({
   uniqueCode,
   attachedName,
@@ -103,7 +107,8 @@ export default function Card3D({
     (e: React.PointerEvent) => {
       if (!isDragging || !isInteractive) return;
       const delta = e.clientX - dragStartX.current;
-      setDragRotation(dragStartRot.current + delta * 0.9);
+      // Max 180° per drag — release and re-grab to rotate further
+      setDragRotation(clamp(dragStartRot.current + delta * 0.9, dragStartRot.current - 180, dragStartRot.current + 180));
     },
     [isDragging, isInteractive],
   );
