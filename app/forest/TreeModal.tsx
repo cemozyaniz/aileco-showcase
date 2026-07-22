@@ -82,7 +82,7 @@ export default function TreeModal({ publicId, onClose }: Props) {
               <img
                 src={`/images/forest/trees/trees-set1-256_${spriteIdx}.png`}
                 alt={tree.growthStage}
-                className="w-28 h-28 sm:w-32 sm:h-32"
+                className="h-28 sm:h-32 w-auto object-contain"
                 style={{ imageRendering: "pixelated" }}
               />
             </div>
