@@ -216,6 +216,15 @@ export const translations = {
     "terms.section12.title": "12. Contact",
     "terms.section12.desc": "For questions about terms of service:",
 
+    // Digital Forest - EN
+    "forest.title": "Digital Forest",
+    "forest.subtitle": "AileCo SmartChain",
+    "forest.stats.totalTrees": "{count} trees planted",
+    "forest.stats.co2Annual": "{co2} CO₂ absorbed / year",
+    "forest.stats.o2Annual": "{o2} O₂ produced / year",
+    "forest.stats.loading": "Loading stats...",
+    "forest.stats.error": "Stats unavailable",
+
     // Common footer links
     "common.home": "Home",
     "common.privacy": "Privacy Policy",
@@ -438,6 +447,15 @@ export const translations = {
     "terms.section11.desc": "Bu Koşulların herhangi bir hükmünün uygulanamaz olduğu durumlarda, diğer hükümler tam olarak yürürlükte kalır. AileCo'nun bir hakkı veya hükmünü kullanmaması, bu hakk veya hükümden feragat ettiği anlamına gelmez.",
     "terms.section12.title": "12. İletişim",
     "terms.section12.desc": "Kullanım koşulları hakkında sorularınız için:",
+
+    // Digital Forest - TR
+    "forest.title": "Dijital Orman",
+    "forest.subtitle": "AileCo SmartChain",
+    "forest.stats.totalTrees": "{count} ağaç dikildi",
+    "forest.stats.co2Annual": "Yılda {co2} CO₂ emilimi",
+    "forest.stats.o2Annual": "Yılda {o2} O₂ üretimi",
+    "forest.stats.loading": "İstatistikler yükleniyor...",
+    "forest.stats.error": "İstatistikler alınamadı",
 
     // Common footer links
     "common.home": "Ana Sayfa",

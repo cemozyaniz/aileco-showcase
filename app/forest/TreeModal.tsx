@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { calculateTreeImpact, formatImpactKg } from "@/lib/forest-impact";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.aileco.com";
 
@@ -50,6 +51,7 @@ export default function TreeModal({ publicId, onClose }: Props) {
     : "Recently";
 
   const spriteIdx = STAGE_TO_SPRITE[tree?.growthStage || "seed"];
+  const impact = tree ? calculateTreeImpact(tree.activationAt, tree.growthStage) : null;
 
   return (
     <div className="absolute inset-0 z-40 flex items-end sm:items-center sm:justify-center" onClick={onClose}>
@@ -109,6 +111,34 @@ export default function TreeModal({ publicId, onClose }: Props) {
                 </div>
               ))}
             </div>
+
+            {/* Environmental Impact */}
+            {impact && impact.oxygenKg > 0 && (
+              <div className="mb-4 p-3 bg-[#0B0B0B] border border-[#D4A853]/10">
+                <p className="text-white/20 text-[8px] uppercase tracking-[0.2em] mb-2 font-body">
+                  Environmental Impact
+                </p>
+                <div className="flex items-center justify-center gap-5">
+                  <div className="text-center">
+                    <p className="text-[#D4A853] text-base font-heading">
+                      {formatImpactKg(impact.oxygenKg)}
+                    </p>
+                    <p className="text-white/25 text-[8px] uppercase tracking-wider mt-0.5 font-body">
+                      O₂ Produced
+                    </p>
+                  </div>
+                  <div className="w-px h-8 bg-white/5" />
+                  <div className="text-center">
+                    <p className="text-[#D4A853] text-base font-heading">
+                      {formatImpactKg(impact.co2Kg)}
+                    </p>
+                    <p className="text-white/25 text-[8px] uppercase tracking-wider mt-0.5 font-body">
+                      CO₂ Absorbed
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Growth bar */}
             <div className="mb-4">

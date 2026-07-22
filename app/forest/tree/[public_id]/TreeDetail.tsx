@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { calculateTreeImpact, formatImpactKg } from "@/lib/forest-impact";
 
 interface TreeData {
   publicId: string;
@@ -35,6 +36,7 @@ export default function TreeDetail({ tree }: { tree: TreeData }) {
   }, []);
 
   const spriteIdx = STAGE_TO_SPRITE[tree.growthStage] || 5;
+  const impact = calculateTreeImpact(tree.activationAt, tree.growthStage);
 
   const planted = tree.activationAt
     ? new Date(tree.activationAt).toLocaleDateString("en-US", {
@@ -115,6 +117,34 @@ export default function TreeDetail({ tree }: { tree: TreeData }) {
             </div>
           ))}
         </div>
+
+        {/* Environmental Impact */}
+        {impact.oxygenKg > 0 && (
+          <div className="mb-6 sm:mb-8 p-4 bg-[#111111] border border-[#D4A853]/10">
+            <p className="text-white/20 text-[9px] uppercase tracking-[0.2em] mb-3 font-body">
+              Environmental Impact
+            </p>
+            <div className="flex items-center justify-center gap-6 sm:gap-10">
+              <div className="text-center">
+                <p className="text-[#D4A853] text-lg sm:text-xl font-heading">
+                  {formatImpactKg(impact.oxygenKg)}
+                </p>
+                <p className="text-white/30 text-[9px] uppercase tracking-wider mt-0.5 font-body">
+                  O₂ Produced
+                </p>
+              </div>
+              <div className="w-px h-10 bg-white/5" />
+              <div className="text-center">
+                <p className="text-[#D4A853] text-lg sm:text-xl font-heading">
+                  {formatImpactKg(impact.co2Kg)}
+                </p>
+                <p className="text-white/30 text-[9px] uppercase tracking-wider mt-0.5 font-body">
+                  CO₂ Absorbed
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Growth bar */}
         <div className="mb-6 sm:mb-8">

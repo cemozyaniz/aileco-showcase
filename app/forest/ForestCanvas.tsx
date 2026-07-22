@@ -2,10 +2,12 @@
 
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useAuth } from "@/providers/AuthProvider";
+import { useTranslation } from "@/providers/LanguageProvider";
 import LoginModal from "@/app/components/LoginModal";
 import ReservationPanel from "./ReservationPanel";
 import ClaimForm from "./ClaimForm";
 import TreeModal from "./TreeModal";
+import ForestStats from "./ForestStats";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.aileco.com";
 
@@ -58,6 +60,7 @@ export default function ForestCanvas() {
   const fetchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { isAuthenticated, token, user, logout } = useAuth();
+  const { t } = useTranslation();
 
   // Sprite preloader
   const spritesRef = useRef<HTMLImageElement[] | null>(null);
@@ -560,14 +563,17 @@ export default function ForestCanvas() {
 
       {/* --- UI Overlay --- */}
 
-      {/* Top-left: Title */}
+      {/* Top-left: Title + Stats */}
       <div className="absolute top-6 left-6 pointer-events-none">
         <h1 className="font-heading text-xl uppercase tracking-[0.3em] text-[#FFFBF0]">
-          Digital Forest
+          {t("forest.title")}
         </h1>
         <p className="text-white/20 text-[10px] tracking-[0.2em] uppercase mt-1 font-body">
-          AileCo SmartChain
+          {t("forest.subtitle")}
         </p>
+        <div className="mt-3">
+          <ForestStats />
+        </div>
       </div>
 
       {/* Top-right: Zoom + My Trees + Auth */}
