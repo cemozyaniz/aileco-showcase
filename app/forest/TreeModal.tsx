@@ -77,12 +77,12 @@ export default function TreeModal({ publicId, onClose }: Props) {
               <button onClick={onClose} className="text-white/30 hover:text-white text-xs uppercase tracking-widest absolute right-6 top-4">✕</button>
             </div>
 
-            {/* Sprite */}
+            {/* Sprite — 64px source at 2× (128px) / 3× (192px) integer scales */}
             <div className="flex justify-center mb-3">
               <img
-                src={`/images/forest/trees/trees-set1-256_${spriteIdx}.png`}
+                src={`/images/forest/trees/trees-set1-64_${spriteIdx}.png`}
                 alt={tree.growthStage}
-                className="h-28 sm:h-32 w-auto object-contain"
+                className="w-32 h-32 sm:w-48 sm:h-48"
                 style={{ imageRendering: "pixelated" }}
               />
             </div>

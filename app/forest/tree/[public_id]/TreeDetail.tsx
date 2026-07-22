@@ -78,12 +78,12 @@ export default function TreeDetail({ tree }: { tree: TreeData }) {
           Digital Forest
         </Link>
 
-        {/* Pixel Art Tree Sprite */}
+        {/* Pixel Art Tree Sprite — 64px source at 2× (128px) / 3× (192px) integer scales */}
         <div className="flex justify-center mb-6 sm:mb-10">
           <img
-            src={`/images/forest/trees/trees-set1-256_${spriteIdx}.png`}
+            src={`/images/forest/trees/trees-set1-64_${spriteIdx}.png`}
             alt={tree.growthStage}
-            className="h-32 sm:h-48 w-auto object-contain"
+            className="w-32 h-32 sm:w-48 sm:h-48"
             style={{ imageRendering: "pixelated" }}
           />
         </div>
